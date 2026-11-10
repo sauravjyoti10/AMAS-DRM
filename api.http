@@ -1,0 +1,49 @@
+### Health check (needs the server running: F5 -> "API: FastAPI (debug)")
+GET http://localhost:8000/health
+
+### Interactive docs: open http://localhost:8000/docs in the browser
+
+### Step 2: Triage, with coordinates in the message
+POST http://localhost:8000/triage
+Content-Type: application/json
+
+{
+  "sos_message": "URGENT SOS! Heavy flooding near Zoo Road Tiniali! Water is rising. 4 people injured on rooftop. Need 10 First Aid Kits and 2 Inflatable Rafts. Coordinates: 26.1750 N, 91.7750 E."
+}
+
+### Step 2: Triage, place name only (location is geocoded)
+POST http://localhost:8000/triage
+Content-Type: application/json
+
+{
+  "sos_message": "Help! Landslide blocked the road near Beltola Tiniali, 2 people hurt, we need 5 First Aid Kits and some drinking water."
+}
+
+### Step 3: Route without hazards (Zoo Road Tiniali -> Dispur, approximate coordinates)
+POST http://localhost:8000/route
+Content-Type: application/json
+
+{
+  "origin": {"lat": 26.1750, "lon": 91.7750},
+  "destination": {"lat": 26.1433, "lon": 91.7898}
+}
+
+### Step 3: Same route with a hazard polygon (move the 4 corners onto the route you got above)
+POST http://localhost:8000/route
+Content-Type: application/json
+
+{
+  "origin": {"lat": 26.1750, "lon": 91.7750},
+  "destination": {"lat": 26.1433, "lon": 91.7898},
+  "hazards": [
+    {
+      "name": "Flooded stretch",
+      "polygon": [
+        {"lat": 26.1602, "lon": 91.7810},
+        {"lat": 26.1602, "lon": 91.7820},
+        {"lat": 26.1612, "lon": 91.7820},
+        {"lat": 26.1612, "lon": 91.7810}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"],
+  "python.terminal.activateEnvironment": true,
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python.analysis.extraPaths": ["."]
+}

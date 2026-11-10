@@ -1,0 +1,114 @@
+"""Routing tests on a small synthetic grid: no internet, no big map file needed.
+
+Grid layout (rows go north, columns go east), 4 x 4 nodes, ~100 m apart:
+    node id = row * 4 + col
+"""
+import networkx as nx
+import pytest
+
+from app.routing import (NoRouteError, OutOfCoverageError, RoadNetwork,
+                         haversine_m)
+from app.schemas import HazardZone
+
+BASE_LAT, BASE_LON, STEP, N = 26.170, 91.770, 0.001, 4
+
+
+def make_grid() -> RoadNetwork:
+    G = nx.MultiDiGraph()
+    G.graph["crs"] = "EPSG:4326"
+    for r in range(N):
+        for c in range(N):
+            G.add_node(r * N + c, y=BASE_LAT + r * STEP, x=BASE_LON + c * STEP)
+
+    def link(a, b):
+        length = float(haversine_m(G.nodes[a]["y"], G.nodes[a]["x"], G.nodes[b]["y"], G.nodes[b]["x"]))
+        G.add_edge(a, b, length=length, travel_time=length / 10)
+        G.add_edge(b, a, length=length, travel_time=length / 10)
+
+    for r in range(N):
+        for c in range(N):
+            if c + 1 < N:
+                link(r * N + c, r * N + c + 1)
+            if r + 1 < N:
+                link(r * N + c, (r + 1) * N + c)
+    return RoadNetwork(G)
+
+
+def node_ll(r, c):
+    return BASE_LAT + r * STEP, BASE_LON + c * STEP
+
+
+def rect(lat_min, lon_min, lat_max, lon_max, name="hazard") -> HazardZone:
+    return HazardZone(name=name, polygon=[
+        {"lat": lat_min, "lon": lon_min}, {"lat": lat_min, "lon": lon_max},
+        {"lat": lat_max, "lon": lon_max}, {"lat": lat_max, "lon": lon_min},
+    ])
+
+
+@pytest.fixture
+def net():
+    return make_grid()
+
+
+def test_snap_exact_node(net):
+    node, dist = net.snap(*node_ll(2, 1))
+    assert node == 2 * N + 1
+    assert dist < 1.0
+
+
+def test_route_without_hazards(net):
+    res = net.route(*node_ll(0, 0), *node_ll(3, 3))
+    assert res.node_count == 7              # 3 north + 3 east + start
+    assert res.blocked_edges == 0
+    assert res.hazard_safe is True
+    assert len(res.path_coordinates) == res.node_count
+
+
+def test_hazard_forces_detour(net):
+    direct = net.route(*node_ll(0, 0), *node_ll(0, 3))
+    assert direct.node_count == 4           # straight along row 0
+
+    # Blocks every east-west link in rows 0-2 between columns 0 and 3.
+    hz = rect(BASE_LAT - 0.0005, BASE_LON + 0.5 * STEP, BASE_LAT + 2.5 * STEP, BASE_LON + 2.5 * STEP)
+    detour = net.route(*node_ll(0, 0), *node_ll(0, 3), hazards=[hz])
+
+    assert detour.node_count == 10          # 3 north + 3 east + 3 south + start
+    assert detour.distance_m > direct.distance_m
+    assert detour.travel_time_s > direct.travel_time_s
+    assert detour.blocked_edges > 0
+    assert detour.hazard_safe is True       # PPT metric: geom(P*) ∩ H = ∅
+
+
+def test_fully_blocked_raises_no_route(net):
+    wall = rect(BASE_LAT - 0.0005, BASE_LON + 0.8 * STEP, BASE_LAT + 3.5 * STEP, BASE_LON + 1.2 * STEP)
+    with pytest.raises(NoRouteError):
+        net.route(*node_ll(0, 0), *node_ll(0, 3), hazards=[wall])
+
+
+def test_origin_inside_hazard_raises_no_route(net):
+    lat, lon = node_ll(0, 0)
+    around_origin = rect(lat - 0.0001, lon - 0.0001, lat + 0.0001, lon + 0.0001)
+    with pytest.raises(NoRouteError):
+        net.route(*node_ll(0, 0), *node_ll(3, 3), hazards=[around_origin])
+
+
+def test_far_away_point_is_out_of_coverage(net):
+    with pytest.raises(OutOfCoverageError):
+        net.route(*node_ll(0, 0), 28.6, 77.2, max_snap_m=1000)   # Delhi
+
+
+def test_graph_is_not_mutated_by_hazards(net):
+    before_edges = net.graph.number_of_edges()
+    before = net.route(*node_ll(0, 0), *node_ll(0, 3))
+
+    hz = rect(BASE_LAT - 0.0005, BASE_LON + 0.5 * STEP, BASE_LAT + 2.5 * STEP, BASE_LON + 2.5 * STEP)
+    net.route(*node_ll(0, 0), *node_ll(0, 3), hazards=[hz])
+
+    assert net.graph.number_of_edges() == before_edges
+    after = net.route(*node_ll(0, 0), *node_ll(0, 3))
+    assert after.distance_m == before.distance_m   # earlier hazard did not leak
+
+
+def test_hazard_zone_needs_three_points():
+    with pytest.raises(Exception):
+        HazardZone(name="bad", polygon=[{"lat": 26.1, "lon": 91.7}, {"lat": 26.2, "lon": 91.8}])

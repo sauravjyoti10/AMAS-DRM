@@ -1,0 +1,7 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+data/*.graphml
+.pytest_cache/
+node_modules/

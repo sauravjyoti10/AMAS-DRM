@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API: FastAPI (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["app.main:app", "--reload", "--port", "8000"],
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    },
+    {
+      "name": "Script: download_map",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "scripts.download_map",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Pytest: current file",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-v"]
+    }
+  ]
+}

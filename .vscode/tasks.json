@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "DB: start PostGIS", "type": "shell", "command": "docker compose up -d db", "problemMatcher": [] },
+    { "label": "DB: stop", "type": "shell", "command": "docker compose down", "problemMatcher": [] },
+    { "label": "Map: download Guwahati", "type": "shell", "command": "python -m scripts.download_map", "problemMatcher": [] },
+    { "label": "Test: run all", "type": "shell", "command": "pytest -v", "problemMatcher": [], "group": "test" }
+  ]
+}

@@ -1,0 +1,16 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+pydantic-settings>=2.3
+python-dotenv>=1.0
+google-genai>=1.0
+osmnx>=2.0
+networkx>=3.3
+scikit-learn>=1.4      # needed by osmnx.nearest_nodes on unprojected graphs
+pulp>=2.8
+psycopg[binary]>=3.2   # PostgreSQL driver (used from Step 5)
+langgraph>=0.2         # used from Step 6
+pytest>=8.0
+httpx>=0.27            # FastAPI TestClient
+shapely>=2.0
+numpy>=1.26

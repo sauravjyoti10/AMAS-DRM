@@ -1,0 +1,122 @@
+@import "leaflet/dist/leaflet.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.dashboard-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 380px;
+  min-width: 380px;
+  background-color: #1e293b;
+  border-right: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.map-viewport {
+  flex-grow: 1;
+  height: 100vh;
+  position: relative;
+}
+
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #0f172a !important;
+}
+
+.sos-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sos-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background-color: #0f172a;
+  color: #fff;
+  resize: none;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.incident-card {
+  background-color: #0f172a;
+  border-left: 4px solid #3b82f6;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.incident-card.CRITICAL { border-left-color: #ef4444; }
+.incident-card.HIGH { border-left-color: #f97316; }
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-CRITICAL { background-color: #ef4444; color: white; }
+.badge-HIGH { background-color: #f97316; color: white; }
+.badge-MODERATE { background-color: #eab308; color: black; }
+.badge-LOW { background-color: #22c55e; color: white; }
+
+.hitl-banner {
+  background-color: #7f1d1d;
+  border: 1px solid #ef4444;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.btn-approve {
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
