@@ -1,12 +1,16 @@
 """Triage Module: SOS parsing and spatial resolution."""
 import re
+import json
+import time
 from typing import Optional
 from geopy.geocoders import Nominatim
 from google import genai
 from google.genai import types
+from pydantic import ValidationError
 
 from app.schemas import ParsedIncident
 from app.config import get_settings
+
 
 def clean_location_query(location_str: str) -> str:
     """Remove landmark phrases like 'near SBI ATM' or 'behind station' for OSM geocoding."""
@@ -22,11 +26,11 @@ def clean_location_query(location_str: str) -> str:
     
     return cleaned if len(cleaned) > 2 else location_str
 
+
 def resolve_location(incident: ParsedIncident) -> ParsedIncident:
     """Validate lat/lon against Guwahati bounds; geocode or set default fallback if missing."""
     settings = get_settings()
     
-    # Safely get attributes (works whether your schema uses 'location' or 'location_name')
     lat = getattr(incident, "latitude", None)
     lon = getattr(incident, "longitude", None)
     
@@ -36,7 +40,6 @@ def resolve_location(incident: ParsedIncident) -> ParsedIncident:
     if valid_lat and valid_lon:
         return incident
 
-    # Safely get the location text
     raw_name = getattr(incident, "location", None) or getattr(incident, "location_name", None) or "Guwahati"
     cleaned_name = clean_location_query(raw_name)
     query = f"{cleaned_name}, Guwahati, Assam, India"
@@ -57,34 +60,37 @@ def resolve_location(incident: ParsedIncident) -> ParsedIncident:
 
     return incident
 
+
 def run_triage(raw_sos: str) -> ParsedIncident:
-    """MOCK TRIAGE: Bypasses Gemini API for local UI testing."""
-    raw = raw_sos.lower()
+    """REAL TRIAGE: Uses Gemini API to parse natural language distress feeds."""
+    settings = get_settings()
+    client = genai.Client(api_key=settings.gemini_api_key)
     
-    severity = "LOW"
-    if "critical" in raw or "collapse" in raw or "landslide" in raw:
-        severity = "CRITICAL"
-    elif "waterlogging" in raw or "flood" in raw:
-        severity = "HIGH"
-    elif "electricity" in raw or "knee-deep" in raw:
-        severity = "MODERATE"
-        
-    loc = "Guwahati"
-    if "chandmari" in raw: loc = "Chandmari"
-    elif "ganeshguri" in raw: loc = "Ganeshguri"
-    elif "zoo road" in raw: loc = "Zoo Road"
-    elif "rajgarh" in raw: loc = "Rajgarh"
+    prompt = f"""
+    You are an emergency disaster response AI. Extract the emergency details from the following distress feed 
+    and format it exactly according to the strict JSON schema provided.
     
-    mock_parsed = ParsedIncident(
-        summary=f"Mocked emergency response for {loc}",
-        severity=severity,
-        location=loc,
-        casualties=5 if severity == "CRITICAL" else 0,
-        needed_resources=[{
-            "item_name": "First Aid Kits",
-            "resource_type": "medical_kit", 
-            "quantity": 3
-        }]
-    )
+    Raw SOS Message: "{raw_sos}"
+    """
     
-    return resolve_location(mock_parsed)
+    # 3-Attempt Retry Logic for API timeouts or hallucination recovery
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model='gemini-3.6-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=ParsedIncident,
+                    temperature=0.1, 
+                ),
+            )
+            
+            data = json.loads(response.text)
+            parsed = ParsedIncident(**data)
+            return resolve_location(parsed)
+            
+        except (ValidationError, json.JSONDecodeError, Exception) as e:
+            if attempt == 2:
+                raise RuntimeError(f"Triage failed after 3 attempts: {str(e)}")
+            time.sleep(1) # Brief pause before retry

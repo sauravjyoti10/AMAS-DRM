@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph, END
 
 from app.triage import run_triage, resolve_location
 from app.allocation import optimize_allocation, Depot, IncidentDemand
-from app.routing import RoadNetwork
+from app.routing import RoadNetwork, get_nearest_depot
 from app.config import get_settings
 
 
@@ -82,15 +82,18 @@ def routing_node(state: AgentState) -> Dict[str, Any]:
 
     try:
         net = RoadNetwork.from_graphml(get_settings().graph_path)
-        # Dispur Depot fixed origin: lat 26.1433, lon 91.7898
-        route_res = net.route(26.1433, 91.7898, dest_lat, dest_lon)
+        
+        # 🧠 Automatically picks the closest depot (Dispur vs. Zoo Road)
+        depot_lat, depot_lon = get_nearest_depot(dest_lat, dest_lon)
+        
+        route_res = net.route(depot_lat, depot_lon, dest_lat, dest_lon)
 
         return {
             "route": {
                 "distance_m": route_res.distance_m,
                 "travel_time_s": route_res.travel_time_s,
                 "node_count": route_res.node_count,
-                "path_coordinates": route_res.path_coordinates,  # 👈 Added here
+                "path_coordinates": route_res.path_coordinates,
             },
             "status": "completed",
             "error": None

@@ -12,6 +12,27 @@ class RouteResult(BaseModel):
     node_count: int
     path_coordinates: List[Tuple[float, float]]  # 👈 Must return actual lat/lon steps!
 
+# Define your available supply depots
+DEPOTS = {
+    "Dispur Depot": {"lat": 26.1433, "lon": 91.7898},
+    "Zoo Road Depot": {"lat": 26.1850, "lon": 91.7820} 
+}
+
+def get_nearest_depot(dest_lat: float, dest_lon: float) -> tuple[float, float]:
+    """Mathematically select the closest warehouse to minimize response distance."""
+    import math
+    
+    closest_lat, closest_lon = DEPOTS["Dispur Depot"]["lat"], DEPOTS["Dispur Depot"]["lon"]
+    min_dist = float('inf')
+    
+    for name, coords in DEPOTS.items():
+        dist = math.sqrt((coords["lat"] - dest_lat)**2 + (coords["lon"] - dest_lon)**2)
+        if dist < min_dist:
+            min_dist = dist
+            closest_lat, closest_lon = coords["lat"], coords["lon"]
+            
+    return closest_lat, closest_lon
+
 class RoadNetwork:
     def __init__(self, G: nx.MultiDiGraph):
         self.G = G
