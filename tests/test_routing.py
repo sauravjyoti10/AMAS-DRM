@@ -112,3 +112,48 @@ def test_graph_is_not_mutated_by_hazards(net):
 def test_hazard_zone_needs_three_points():
     with pytest.raises(Exception):
         HazardZone(name="bad", polygon=[{"lat": 26.1, "lon": 91.7}, {"lat": 26.2, "lon": 91.8}])
+
+
+# ---------- real road geometry, hazard geometry, last-metre legs ----------
+def test_route_follows_edge_geometry_not_straight_lines():
+    G = nx.MultiDiGraph()
+    G.graph["crs"] = "EPSG:4326"
+    G.add_node(1, y=26.170, x=91.770)
+    G.add_node(2, y=26.170, x=91.772)
+    bend = f"LINESTRING (91.770 26.170, 91.771 26.1715, 91.772 26.170)"   # road bows north between the nodes
+    G.add_edge(1, 2, length=300.0, travel_time=30.0, geometry=bend)
+    res = RoadNetwork(G).route(26.170, 91.770, 26.170, 91.772)
+    assert res.node_count == 2
+    assert len(res.path_coordinates) == 3                       # the bend is kept
+    assert res.path_coordinates[1] == [26.1715, 91.771]
+    assert res.distance_m == 300.0 and res.travel_time_s == 30.0
+
+
+def test_hazard_over_a_curved_road_with_no_node_inside_blocks_it():
+    G = nx.MultiDiGraph()
+    G.graph["crs"] = "EPSG:4326"
+    for n, (la, lo) in {1: (26.170, 91.770), 2: (26.170, 91.772), 3: (26.168, 91.771)}.items():
+        G.add_node(n, y=la, x=lo)
+    bend = "LINESTRING (91.770 26.170, 91.771 26.1715, 91.772 26.170)"
+    G.add_edge(1, 2, length=300.0, travel_time=30.0, geometry=bend)
+    for a, b in ((1, 3), (3, 2)):
+        G.add_edge(a, b, length=400.0, travel_time=80.0)
+    net = RoadNetwork(G)
+    flood = rect(26.1712, 91.7708, 26.1718, 91.7712)            # sits on the bend only
+    res = net.route(26.170, 91.770, 26.170, 91.772, hazards=[flood])
+    assert res.node_count == 3 and res.hazard_safe              # took the southern road
+    assert res.blocked_edges == 1
+
+
+def test_route_connects_exact_points_to_the_road():
+    net = make_grid()
+    lat, lon = node_ll(0, 0)
+    res = net.route(lat + 0.0002, lon, *node_ll(0, 3))          # ~22 m from the nearest node
+    assert res.origin_snap_m > 1
+    assert res.path_coordinates[0] == [lat + 0.0002, lon]
+
+
+def test_snap_limit_protects_against_wrong_locations():
+    net = make_grid()
+    with pytest.raises(OutOfCoverageError):
+        net.route(*node_ll(0, 0), 26.30, 91.77, max_snap_m=500)

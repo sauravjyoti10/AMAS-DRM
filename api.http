@@ -47,3 +47,23 @@ Content-Type: application/json
     }
   ]
 }
+
+### Step 2: The Khanapara SOS from the dashboard (must resolve to Khanapara, ~26.125 N 91.811 E, not the city centre)
+POST http://localhost:8000/triage
+Content-Type: application/json
+
+{
+  "sos_message": "We are stuck near the Khanapara bus stand. Flash floods have completely submerged the main road and water is rising fast. About 15 travelers are stranded on top of a bus stop roof. Please send inflatable rafts and drinking water immediately."
+}
+
+### Hazards: add a 400 m flood zone, list, delete (use the id from the add response)
+POST http://localhost:8000/api/hazards
+Content-Type: application/json
+
+{ "name": "Flooded underpass", "center": {"lat": 26.1500, "lon": 91.7850}, "radius_m": 400 }
+
+###
+GET http://localhost:8000/api/hazards
+
+###
+DELETE http://localhost:8000/api/hazards/REPLACE_WITH_ID

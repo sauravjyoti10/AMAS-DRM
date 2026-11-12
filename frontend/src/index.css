@@ -120,3 +120,50 @@ body, html, #root {
   cursor: pointer;
   font-size: 0.85rem;
 }
+
+/* ---- map pins: depots and incidents look different ---- */
+.pin { background: transparent; border: none; }
+.pin span {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  font-weight: 800; font-size: 15px; color: #fff;
+  border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+.pin-depot span { background: #1d4ed8; border-radius: 6px; }
+.pin-incident span { background: #2563eb; }
+.pin-CRITICAL span { background: #dc2626; animation: pulse 1.6s infinite; }
+.pin-HIGH span { background: #f97316; }
+.pin-MODERATE span { background: #eab308; color: #111; }
+.pin-LOW span { background: #16a34a; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  70% { box-shadow: 0 0 0 14px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+/* ---- picking a point on the map ---- */
+.map-viewport.picking .leaflet-container { cursor: crosshair !important; }
+
+/* ---- sidebar additions ---- */
+.notice { background: #7f1d1d; color: #fecaca; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; margin-bottom: 0.75rem; }
+.muted { color: #94a3b8; font-size: 0.75rem; }
+.hazard-box { background: #0f172a; border-radius: 6px; padding: 0.6rem 0.75rem; margin-bottom: 1.25rem; }
+.hazard-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; font-size: 0.85rem; }
+.hazard-controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.hazard-controls input[type=range] { flex: 1; min-width: 80px; }
+.hazard-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding: 0.25rem 0; border-top: 1px solid #1e293b; margin-top: 0.35rem; }
+.btn-secondary { background: #334155; color: #fff; border: none; padding: 0.4rem 0.7rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+.btn-secondary.active { background: #b91c1c; }
+.btn-pin { background: #1d4ed8; color: #fff; border: none; padding: 0.4rem 0.7rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; }
+.icon-btn { background: transparent; border: none; color: #94a3b8; cursor: pointer; }
+.icon-btn:hover { color: #ef4444; }
+.incident-card { cursor: pointer; }
+.loc-line { font-size: 0.8rem; color: #cbd5e1; }
+.loc-sub { font-size: 0.7rem; color: #64748b; margin-bottom: 0.3rem; }
+.route-info { font-size: 0.8rem; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #1e293b; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+.chip { font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 999px; }
+.chip.ok { background: #14532d; color: #bbf7d0; }
+.chip.warn { background: #713f12; color: #fde68a; }
+.chip.bad { background: #7f1d1d; color: #fecaca; }
+.warn-line { font-size: 0.72rem; color: #fbbf24; margin-top: 0.3rem; }

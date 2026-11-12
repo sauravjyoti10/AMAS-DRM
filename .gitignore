@@ -5,3 +5,5 @@ __pycache__/
 data/*.graphml
 .pytest_cache/
 node_modules/
+data/geocode_cache.json
+data/hazards.json

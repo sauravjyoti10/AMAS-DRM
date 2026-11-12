@@ -1,0 +1,49 @@
+{
+ "graph": "SYNTHETIC grid (not real roads)",
+ "seed": 42,
+ "trials": 200,
+ "naive_router_unsafe_rate": 1.0,
+ "route_found": 200,
+ "route_found_rate": 1.0,
+ "no_safe_route": 0,
+ "hazard_intersections": 0,
+ "router_self_check_disagreements": 0,
+ "dist_ratio": {
+  "n": 200,
+  "mean": 1.026511855760078,
+  "median": 1.0000210010432413,
+  "p95": 1.1342294522443723,
+  "max": 1.2784056779783155
+ },
+ "time_ratio": {
+  "n": 200,
+  "mean": 1.0457472926108264,
+  "median": 1.0245637258590503,
+  "p95": 1.1502490727683874,
+  "max": 1.3007446474478275
+ },
+ "route_ms": {
+  "n": 200,
+  "mean": 14.094289610000033,
+  "median": 12.565107000000353,
+  "p95": 23.162164399980156,
+  "max": 183.33004999999503
+ },
+ "by_hazard_count": {
+  "1": {
+   "trials": 61,
+   "found_rate": 1.0,
+   "median_dist_ratio": 1.0000117407871625
+  },
+  "2": {
+   "trials": 68,
+   "found_rate": 1.0,
+   "median_dist_ratio": 1.000022569539349
+  },
+  "3": {
+   "trials": 71,
+   "found_rate": 1.0,
+   "median_dist_ratio": 1.0000351273493961
+  }
+ }
+}

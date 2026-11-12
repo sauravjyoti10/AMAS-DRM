@@ -5,6 +5,7 @@ pydantic-settings>=2.3
 python-dotenv>=1.0
 google-genai>=1.0
 osmnx>=2.0
+geopy>=2.4          # OpenStreetMap (Nominatim) geocoding
 networkx>=3.3
 scikit-learn>=1.4      # needed by osmnx.nearest_nodes on unprojected graphs
 pulp>=2.8
