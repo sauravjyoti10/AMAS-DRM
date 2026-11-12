@@ -91,7 +91,12 @@ _MODERATE = ("electricity", "power cut", "knee-deep", "blocked", "fallen tree", 
 
 def parse_coordinates(text: str) -> Optional[Tuple[float, float]]:
     """'26.1750 N, 91.7750 E' or '26.175, 91.775' -> (lat, lon)."""
-    m = re.search(r"(-?\d{1,2}\.\d{2,})\s*°?\s*([NS])?\s*[,;/ ]\s*(-?\d{2,3}\.\d{2,})\s*°?\s*([EW])?", text, re.I)
+    # The hemisphere letter must stand alone: "91.77 water" is not "91.77 W" (west).
+    m = re.search(
+        r"(?:\blat(?:itude)?\s*[:=]?\s*)?(-?\d{1,2}\.\d{2,})\s*°?\s*([NS](?![A-Za-z]))?"
+        r"(?:\s*[,;/]\s*|\s+)"
+        r"(?:\blon(?:g|gitude)?\s*[:=]?\s*)?(-?\d{2,3}\.\d{2,})\s*°?\s*([EW](?![A-Za-z]))?",
+        text, re.I)
     if not m:
         return None
     lat, lon = float(m.group(1)), float(m.group(3))

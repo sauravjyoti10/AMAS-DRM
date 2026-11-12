@@ -200,3 +200,15 @@ def test_precise_osm_hit_near_the_locality_is_kept(monkeypatch):
                            settings=Settings(geocode_online=True))
     assert (res.latitude, res.longitude) == (26.1187, 91.8059)
     assert res.uncertainty_m == 150.0
+
+
+def test_parse_coordinates_does_not_mistake_the_next_word_for_a_hemisphere():
+    # Found by the evaluation: "91.7712 water" was read as 91.7712 W (west), giving a negative longitude.
+    assert parse_coordinates("Location 26.1595, 91.7712 water rising") == (26.1595, 91.7712)
+    assert parse_coordinates("at 26.14 South 91.80 East") is None or parse_coordinates("at 26.14 South 91.80 East")[1] > 0
+
+
+def test_parse_coordinates_accepts_lat_lon_labels():
+    assert parse_coordinates("Lat 26.1730 Lon 91.7730 flooded road") == (26.173, 91.773)
+    assert parse_coordinates("latitude: 26.1730, longitude: 91.7730") == (26.173, 91.773)
+    assert parse_coordinates("26.1450 N, 91.8020 E") == (26.145, 91.802)

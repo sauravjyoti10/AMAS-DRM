@@ -3,6 +3,12 @@ import pulp
 from pydantic import BaseModel
 from typing import List, Dict, Tuple
 
+# Transit penalty used by the live pipeline. Found by evaluation/eval_allocation.py: with the old 0.1, a LOW incident
+# (severity weight 1) more than 10 km from a depot had a NEGATIVE utility, so it received nothing even while stock sat idle.
+# Keeping lambda * (longest realistic trip, ~30 km) below the smallest severity weight (1.0) makes distance a tie-breaker only.
+PIPELINE_TRANSIT_PENALTY = 0.01
+
+
 class Depot(BaseModel):
     id: str
     name: str = ""

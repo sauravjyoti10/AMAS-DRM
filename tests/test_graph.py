@@ -142,3 +142,18 @@ def test_routing_fails_cleanly_when_hazards_cut_off_every_depot(mock_from_graphm
 def test_missing_map_file_gives_a_clear_error(_):
     out = routing_node({"incident": {"latitude": 26.125, "longitude": 91.8108}, "allocation": {"INC_1": {}}})
     assert out["status"] == "failed" and "download_map" in out["error"]
+
+
+@patch("app.graph.RoadNetwork.from_graphml")
+def test_low_severity_incident_far_from_every_depot_still_gets_stock(mock_from_graphml, no_hazards):
+    """Regression for the evaluation finding: with transit penalty 0.1 a LOW incident 15 km away got nothing."""
+    from app.graph import allocation_node
+    net = MagicMock()
+    net.route.return_value = fake_route(15_000.0)               # 15 km from every depot
+    mock_from_graphml.return_value = net
+    state = {"incident": {"severity": "LOW", "latitude": 26.125, "longitude": 91.8108,
+                          "needed_resources": [{"item_name": "Drinking Water", "quantity": 10}]}}
+
+    out = allocation_node(state)
+
+    assert sum(out["allocation"]["INC_1"].values()) == 10

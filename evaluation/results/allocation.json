@@ -1,0 +1,111 @@
+{
+ "lambda": 0.01,
+ "scenarios_per_level": 100,
+ "seed": 42,
+ "table": {
+  "0.6": {
+   "fill_rate": {
+    "milp": 1.0,
+    "fcfs": 1.0,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "weighted_fill": {
+    "milp": 1.0,
+    "fcfs": 1.0,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "critical_fill": {
+    "milp": 1.0,
+    "fcfs": 1.0,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "km_per_unit": {
+    "milp": 7.632944182185285,
+    "fcfs": 7.8983883799061205,
+    "mean_diff": -0.2654441977208367,
+    "milp_not_worse": 0.5
+   }
+  },
+  "1.0": {
+   "fill_rate": {
+    "milp": 0.9986004868045165,
+    "fcfs": 0.9986004868045165,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "weighted_fill": {
+    "milp": 0.9995781658263175,
+    "fcfs": 0.9985568734994159,
+    "mean_diff": 0.0010212923269014996,
+    "milp_not_worse": 1.0
+   },
+   "critical_fill": {
+    "milp": 1.0,
+    "fcfs": 0.9997042429757708,
+    "mean_diff": 0.00029575702422932477,
+    "milp_not_worse": 1.0
+   },
+   "km_per_unit": {
+    "milp": 9.389151532473626,
+    "fcfs": 10.255923385690982,
+    "mean_diff": -0.8667718532173566,
+    "milp_not_worse": 0.06
+   }
+  },
+  "1.5": {
+   "fill_rate": {
+    "milp": 0.6666583613763082,
+    "fcfs": 0.6666583613763082,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "weighted_fill": {
+    "milp": 0.8602010640937691,
+    "fcfs": 0.659573915372697,
+    "mean_diff": 0.20062714872107212,
+    "milp_not_worse": 1.0
+   },
+   "critical_fill": {
+    "milp": 0.9989911218724778,
+    "fcfs": 0.680103940602617,
+    "mean_diff": 0.31888718126986076,
+    "milp_not_worse": 1.0
+   },
+   "km_per_unit": {
+    "milp": 8.779915369142037,
+    "fcfs": 10.487569530571593,
+    "mean_diff": -1.7076541614295575,
+    "milp_not_worse": 0.19
+   }
+  },
+  "2.0": {
+   "fill_rate": {
+    "milp": 0.5001395697014683,
+    "fcfs": 0.5001395697014683,
+    "mean_diff": 0.0,
+    "milp_not_worse": 1.0
+   },
+   "weighted_fill": {
+    "milp": 0.7399667515474517,
+    "fcfs": 0.5026119796449872,
+    "mean_diff": 0.23735477190246457,
+    "milp_not_worse": 1.0
+   },
+   "critical_fill": {
+    "milp": 0.9804754712612406,
+    "fcfs": 0.49054608317322235,
+    "mean_diff": 0.48992938808801817,
+    "milp_not_worse": 1.0
+   },
+   "km_per_unit": {
+    "milp": 9.069997173900394,
+    "fcfs": 10.788434531317899,
+    "mean_diff": -1.718437357417505,
+    "milp_not_worse": 0.24
+   }
+  }
+ }
+}

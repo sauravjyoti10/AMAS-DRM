@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from app.allocation import IncidentDemand, optimize_allocation
+from app.allocation import PIPELINE_TRANSIT_PENALTY, IncidentDemand, optimize_allocation
 from app.config import get_settings
 from app.depots import DEPOTS
 from app.geo import haversine_m
@@ -128,7 +128,8 @@ def allocation_node(state: AgentState) -> Dict[str, Any]:
         lon=lon,
     )
     km = _depot_distances_km(net, lat, lon, avoid)
-    plan = optimize_allocation([inc_demand], DEPOTS, {("INC_1", d.id): km[d.id] for d in DEPOTS})
+    plan = optimize_allocation([inc_demand], DEPOTS, {("INC_1", d.id): km[d.id] for d in DEPOTS},
+                               lambda_penalty=PIPELINE_TRANSIT_PENALTY)
 
     return {"allocation": plan, "status": "allocated", "error": None, "warnings": warnings}
 
