@@ -5,6 +5,7 @@ from typing import List, Dict, Tuple
 
 class Depot(BaseModel):
     id: str
+    name: str = ""
     capacity: int
     lat: float
     lon: float
