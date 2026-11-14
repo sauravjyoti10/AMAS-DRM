@@ -212,3 +212,56 @@ def test_parse_coordinates_accepts_lat_lon_labels():
     assert parse_coordinates("Lat 26.1730 Lon 91.7730 flooded road") == (26.173, 91.773)
     assert parse_coordinates("latitude: 26.1730, longitude: 91.7730") == (26.173, 91.773)
     assert parse_coordinates("26.1450 N, 91.8020 E") == (26.145, 91.802)
+
+
+# ---------- OpenStreetMap lookup wiring (geopy is faked, no internet) ----------
+import sys
+import types
+
+
+class _FakeLoc:
+    latitude, longitude, raw = 26.1186, 91.8149, {"class": "highway", "addresstype": "bus_stop"}
+
+
+def _fake_geopy(monkeypatch, answers):
+    queries = []
+
+    class FakeNominatim:
+        def __init__(self, **kw): pass
+        def geocode(self, q, **kw):
+            queries.append((q, kw))
+            return answers.pop(0)
+
+    mod = types.ModuleType("geopy.geocoders"); mod.Nominatim = FakeNominatim
+    monkeypatch.setitem(sys.modules, "geopy", types.ModuleType("geopy"))
+    monkeypatch.setitem(sys.modules, "geopy.geocoders", mod)
+    monkeypatch.setattr(triage_mod.time, "sleep", lambda s: None)
+    return queries
+
+
+def test_nominatim_tries_the_bare_phrase_first_inside_the_guwahati_box(monkeypatch, tmp_path):
+    queries = _fake_geopy(monkeypatch, [_FakeLoc()])
+    s = Settings(geocode_cache_path=str(tmp_path / "c.json"))
+    assert triage_mod._nominatim("Khanapara bus stand", s) == (26.1186, 91.8149, 150.0)
+    assert queries[0][0] == "Khanapara bus stand"                 # no ", Guwahati, Assam, India" suffix
+    assert queries[0][1]["bounded"] is True and queries[0][1]["country_codes"] == "in"
+
+
+def test_nominatim_retries_with_city_name_and_remembers_misses_only_for_a_day(monkeypatch, tmp_path):
+    queries = _fake_geopy(monkeypatch, [None, None, _FakeLoc()])
+    s = Settings(geocode_cache_path=str(tmp_path / "c.json"))
+    assert triage_mod._nominatim("Ganeshguri", s) is None
+    assert [q for q, _ in queries] == ["Ganeshguri", "Ganeshguri, Guwahati"]
+    assert triage_mod._nominatim("Ganeshguri", s) is None         # recent miss: no new request
+    assert len(queries) == 2
+    cache = triage_mod._cache_load(s.geocode_cache_path)
+    cache["ganeshguri"]["miss_at"] -= 2 * 24 * 3600               # a miss older than the TTL is retried
+    triage_mod._cache_save(s.geocode_cache_path, cache)
+    assert triage_mod._nominatim("Ganeshguri", s) == (26.1186, 91.8149, 150.0)
+
+
+def test_legacy_null_cache_entries_are_retried(monkeypatch, tmp_path):
+    path = tmp_path / "c.json"
+    path.write_text('{"khanapara bus stand": null}')
+    _fake_geopy(monkeypatch, [_FakeLoc()])
+    assert triage_mod._nominatim("Khanapara bus stand", Settings(geocode_cache_path=str(path))) is not None

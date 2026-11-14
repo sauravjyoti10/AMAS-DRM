@@ -20,7 +20,7 @@ GAZETTEER: Dict[str, Tuple[float, float, float]] = {
     "zoo road tiniali": (26.1750, 91.7750, 400),   # APPROX (project depot location)
     "zoo road":         (26.1740, 91.7740, 800),   # APPROX
     "rajgarh":          (26.1730, 91.7730, 900),   # APPROX
-    "chandmari":        (26.1715, 91.7640, 900),   # APPROX
+    "chandmari":        (26.1841, 91.7741, 700),   # OSM Nominatim result (replaces an earlier estimate that was ~1.7 km off)
     "ganeshguri":       (26.1495, 91.7860, 600),   # APPROX
     "dispur":           (26.1433, 91.7898, 800),   # APPROX (project depot location)
     "beltola":          (26.1280, 91.8000, 800),   # APPROX

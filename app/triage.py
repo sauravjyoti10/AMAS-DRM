@@ -222,31 +222,44 @@ def _cache_save(path: str, cache: dict) -> None:
         pass
 
 
+MISS_TTL_S = 24 * 3600   # "not found" answers are re-checked after a day (OSM data and our query wording both improve)
+
+
 def _nominatim(phrase: str, settings: Settings) -> Optional[Tuple[float, float, float]]:
-    """OpenStreetMap lookup restricted to the Guwahati bounding box. Cached on disk. -> (lat, lon, uncertainty_m)"""
+    """OpenStreetMap lookup restricted to the Guwahati bounding box. Cached on disk. -> (lat, lon, uncertainty_m)
+
+    The bounding box already limits results to Guwahati, so the bare phrase is tried first: adding
+    ', Guwahati, Assam, India' to a bounded query made Nominatim return nothing for well-known localities.
+    """
     global _last_nominatim_call
     key = gazetteer.normalize(phrase)
     with _geo_lock:
         cache = _cache_load(settings.geocode_cache_path)
-        if key in cache:
-            hit = cache[key]
-            return tuple(hit) if hit else None
+        hit = cache.get(key)
+        if isinstance(hit, list):
+            return tuple(hit)
+        if isinstance(hit, dict) and time.time() - hit.get("miss_at", 0) < MISS_TTL_S:
+            return None  # recent confirmed miss (legacy `null` entries are treated as expired)
+        loc = None
         try:
             from geopy.geocoders import Nominatim
-            wait = 1.1 - (time.time() - _last_nominatim_call)  # Nominatim usage policy: max 1 request/second
-            if wait > 0:
-                time.sleep(wait)
-            _last_nominatim_call = time.time()
             geo = Nominatim(user_agent=settings.geocode_user_agent, timeout=settings.geocode_timeout_s)
-            loc = geo.geocode(
-                f"{phrase}{GEO_SUFFIX}",
-                viewbox=[(settings.bbox_south, settings.bbox_west), (settings.bbox_north, settings.bbox_east)],
-                bounded=True, country_codes="in", exactly_one=True,
-            )
+            for query in (phrase, f"{phrase}, Guwahati"):
+                wait = 1.1 - (time.time() - _last_nominatim_call)  # Nominatim usage policy: max 1 request/second
+                if wait > 0:
+                    time.sleep(wait)
+                _last_nominatim_call = time.time()
+                loc = geo.geocode(
+                    query,
+                    viewbox=[(settings.bbox_south, settings.bbox_west), (settings.bbox_north, settings.bbox_east)],
+                    bounded=True, country_codes="in", exactly_one=True,
+                )
+                if loc is not None:
+                    break
         except Exception:
             return None  # offline / rate limited: do NOT cache, try again next time
         if loc is None:
-            cache[key] = None
+            cache[key] = {"miss_at": time.time()}
             _cache_save(settings.geocode_cache_path, cache)
             return None
         raw = getattr(loc, "raw", {}) or {}
