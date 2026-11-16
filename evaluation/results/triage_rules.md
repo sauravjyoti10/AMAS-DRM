@@ -40,7 +40,7 @@ Casualties: exact match 77.8%, within +-1 88.0%, mean absolute error 0.87. Resou
 - Places not in the gazetteer: 0 of 12 resolved (online geocoder off, so unresolved is expected).
 - Reported uncertainty when correct: median +-800 m.
 
-### Latency per message (parse + locate): median 0.10 ms, p95 0.17 ms.
+### Latency per message (parse + locate): median 0.17 ms, p95 0.48 ms.
 
 ### Error analysis (36 messages with a severity or location error)
 - #25 gold CRITICAL / predicted LOW; location: correct. "Stuck in car near Maligaon, water entering the car, 4 inside. HELP"

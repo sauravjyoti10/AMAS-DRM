@@ -1,0 +1,49 @@
+{
+ "graph": "real OSM graph data/guwahati_roads.graphml",
+ "seed": 42,
+ "trials": 200,
+ "naive_router_unsafe_rate": 1.0,
+ "route_found": 193,
+ "route_found_rate": 0.965,
+ "no_safe_route": 7,
+ "hazard_intersections": 0,
+ "router_self_check_disagreements": 0,
+ "dist_ratio": {
+  "n": 193,
+  "mean": 1.1145799983044873,
+  "median": 1.0752434020266401,
+  "p95": 1.5694055056073735,
+  "max": 1.9825647366430668
+ },
+ "time_ratio": {
+  "n": 193,
+  "mean": 1.239290861949338,
+  "median": 1.1136372975730842,
+  "p95": 1.9860107239568754,
+  "max": 3.140748743201125
+ },
+ "route_ms": {
+  "n": 200,
+  "mean": 49.9805354946875,
+  "median": 43.03189995698631,
+  "p95": 102.58769501233475,
+  "max": 481.2450999743305
+ },
+ "by_hazard_count": {
+  "1": {
+   "trials": 67,
+   "found_rate": 1.0,
+   "median_dist_ratio": 1.0552675480656573
+  },
+  "2": {
+   "trials": 69,
+   "found_rate": 0.9710144927536232,
+   "median_dist_ratio": 1.0551825343656074
+  },
+  "3": {
+   "trials": 64,
+   "found_rate": 0.921875,
+   "median_dist_ratio": 1.1001570276931378
+  }
+ }
+}

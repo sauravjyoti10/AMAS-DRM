@@ -1,5 +1,5 @@
 # AMAS-DRM evaluation report
-Generated 2026-11-12 12:43. **Routing and latency used a SYNTHETIC grid: these two sections only prove the code works, they are not thesis numbers.**
+Generated 2026-11-16 13:51. Routing and latency used the real OSM road graph.
 
 ---
 
@@ -45,7 +45,7 @@ Casualties: exact match 77.8%, within +-1 88.0%, mean absolute error 0.87. Resou
 - Places not in the gazetteer: 0 of 12 resolved (online geocoder off, so unresolved is expected).
 - Reported uncertainty when correct: median +-800 m.
 
-### Latency per message (parse + locate): median 0.10 ms, p95 0.17 ms.
+### Latency per message (parse + locate): median 0.17 ms, p95 0.48 ms.
 
 ### Error analysis (36 messages with a severity or location error)
 - #25 gold CRITICAL / predicted LOW; location: correct. "Stuck in car near Maligaon, water entering the car, 4 inside. HELP"
@@ -77,25 +77,25 @@ Casualties: exact match 77.8%, within +-1 88.0%, mean absolute error 0.87. Resou
 
 ---
 
-## Routing safety evaluation (SYNTHETIC grid (not real roads), seed 42)
+## Routing safety evaluation (real OSM graph data/guwahati_roads.graphml, seed 42)
 200 trials, 1-3 circular hazards (150-500 m) placed on the normal route each time.
 
 | Metric | Result |
 |---|---|
 | Hazard-unaware router crossing a hazard | 100.0% (by construction) |
-| **AMAS paths intersecting a hazard** | **0 of 200** (target 0) |
-| Safe route found | 100.0% (200 of 200) |
-| No safe route (hazards cut the network) | 0 |
+| **AMAS paths intersecting a hazard** | **0 of 193** (target 0) |
+| Safe route found | 96.5% (193 of 200) |
+| No safe route (hazards cut the network) | 7 |
 | Independent check disagrees with router's own flag | 0 |
-| Distance vs normal route (median / p95) | x1.00 / x1.13 |
-| Travel time vs normal route (median / p95) | x1.02 / x1.15 |
-| Routing time per query (median / p95) | 13 ms / 23 ms |
+| Distance vs normal route (median / p95) | x1.08 / x1.57 |
+| Travel time vs normal route (median / p95) | x1.11 / x1.99 |
+| Routing time per query (median / p95) | 43 ms / 103 ms |
 
 | Hazards on route | Trials | Safe route found | Median distance ratio |
 |---|---|---|---|
-| 1 | 61 | 100.0% | x1.00 |
-| 2 | 68 | 100.0% | x1.00 |
-| 3 | 71 | 100.0% | x1.00 |
+| 1 | 67 | 100.0% | x1.06 |
+| 2 | 69 | 97.1% | x1.06 |
+| 3 | 64 | 92.2% | x1.10 |
 
 Reading it: zero intersections means every returned path stayed out of every hazard. A trial with no route is a correct refusal, not a failure: the router will not drive through a hazard to produce an answer.
 
@@ -127,12 +127,12 @@ Reading it: with plenty of stock (0.6) both policies serve everyone and differ o
 
 ---
 
-## End-to-end latency (SYNTHETIC grid, offline geocoding)
-86 cycles measured (14 skipped: location unresolved, a human pins those), 2 active hazards. Times in ms; human approval time is excluded.
+## End-to-end latency (real OSM graph, offline geocoding)
+81 cycles measured (19 skipped: location unresolved, a human pins those), 2 active hazards. Times in ms; human approval time is excluded.
 
 | Stage | Median | Mean | p95 | Max |
 |---|---|---|---|---|
-| Triage + locate | 0.3 | 0.3 | 0.4 | 2.2 |
-| Allocation (MILP) | 18.0 | 27.1 | 88.7 | 174.7 |
-| Routing | 5.9 | 14.1 | 76.7 | 87.6 |
-| **Total** | 24.5 | 41.6 | 166.3 | 196.2 |
+| Triage + locate | 1307.4 | 1817.3 | 4418.1 | 5296.3 |
+| Allocation (MILP) | 118.1 | 137.2 | 237.5 | 529.3 |
+| Routing | 16.4 | 35.3 | 169.4 | 201.3 |
+| **Total** | 1496.7 | 1989.8 | 4527.8 | 5647.6 |
