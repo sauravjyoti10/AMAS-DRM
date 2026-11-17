@@ -21,7 +21,8 @@ from app.geo import haversine_m
 from app.schemas import ParsedIncident, ResourceRequirement, TriageResult
 
 GEO_SUFFIX = ", Guwahati, Assam, India"
-MAX_ATTEMPTS = 2
+MAX_ATTEMPTS = 5          # Gemini 503/429 are temporary, so retry with a growing pause
+RETRY_BASE_S = 2.0
 
 SYSTEM_PROMPT = """You are the triage agent of a disaster-management system for Guwahati, Assam, India.
 Read one raw SOS message and fill the schema.
@@ -57,7 +58,7 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
         client = genai.Client(api_key=settings.gemini_api_key)
 
     last_error: Optional[Exception] = None
-    for _ in range(MAX_ATTEMPTS):
+    for attempt in range(MAX_ATTEMPTS):
         try:
             resp = client.models.generate_content(
                 model=settings.gemini_model,
@@ -72,6 +73,8 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
             return ParsedIncident.model_validate_json(_strip_fences(resp.text))
         except Exception as exc:  # bad JSON, schema violation, API/network error
             last_error = exc
+            if attempt < MAX_ATTEMPTS - 1:
+                time.sleep(RETRY_BASE_S * (2 ** attempt))  # 2, 4, 8, 16 s
     raise TriageError(f"Triage failed after {MAX_ATTEMPTS} attempts: {last_error}")
 
 
