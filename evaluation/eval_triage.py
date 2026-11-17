@@ -20,6 +20,7 @@ from typing import Dict, List
 from app import gazetteer
 from app.config import Settings, get_settings
 from app.geo import haversine_m
+from app.schemas import ParsedIncident
 from app.triage import TriageError, resolve_location, rule_based_triage, run_triage
 from evaluation.dataset import Sample, load
 from evaluation.metrics import (SEVERITIES, confusion, macro, md_table, pct, per_class,
@@ -54,16 +55,42 @@ def score_location(s: Sample, res) -> Dict:
     return out
 
 
+CACHE = os.path.join(os.path.dirname(__file__), "results", "gemini_cache.json")
+
+
+def _load_cache() -> Dict:
+    try:
+        with open(CACHE, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_cache(cache: Dict) -> None:
+    os.makedirs(os.path.dirname(CACHE), exist_ok=True)
+    with open(CACHE, "w", encoding="utf-8") as f:
+        json.dump(cache, f)
+
+
 def evaluate(mode: str, online: bool, limit: int = 0) -> Dict:
     data = load()[: limit or None]
     settings = Settings(geocode_online=online)
     key_settings = get_settings()
     rows: List[Dict] = []
+    cache = _load_cache() if mode == "gemini" else {}
     for s in data:
         t0 = time.perf_counter()
         parse_error = None
         try:
-            parsed = rule_based_triage(s.text) if mode == "rules" else run_triage(s.text, settings=key_settings)
+            if mode == "rules":
+                parsed = rule_based_triage(s.text)
+            elif s.text in cache:                      # resume: reuse an earlier successful Gemini answer
+                parsed = ParsedIncident.model_validate(cache[s.text])
+            else:
+                parsed = run_triage(s.text, settings=key_settings)
+                cache[s.text] = parsed.model_dump()
+                _save_cache(cache)
+                time.sleep(1.0)                        # stay under per-minute rate limits
         except TriageError as exc:
             parse_error, parsed = str(exc), None
         if parsed is None:

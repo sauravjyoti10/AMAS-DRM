@@ -7,3 +7,4 @@ data/*.graphml
 node_modules/
 data/geocode_cache.json
 data/hazards.json
+evaluation/results/gemini_cache.json

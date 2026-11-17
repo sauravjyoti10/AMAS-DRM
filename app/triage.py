@@ -73,9 +73,12 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
             return ParsedIncident.model_validate_json(_strip_fences(resp.text))
         except Exception as exc:  # bad JSON, schema violation, API/network error
             last_error = exc
+            msg = str(exc)
+            if "PerDay" in msg or "NOT_FOUND" in msg or "API key" in msg:
+                break  # daily quota, wrong model name or bad key: waiting will not help
             if attempt < MAX_ATTEMPTS - 1:
                 time.sleep(RETRY_BASE_S * (2 ** attempt))  # 2, 4, 8, 16 s
-    raise TriageError(f"Triage failed after {MAX_ATTEMPTS} attempts: {last_error}")
+    raise TriageError(f"Triage failed: {last_error}")
 
 
 # ---- rule-based fallback (works offline, no API key) ----
