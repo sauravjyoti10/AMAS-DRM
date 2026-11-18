@@ -10,5 +10,8 @@
     "**/.pytest_cache": true
   },
   "python-envs.defaultEnvManager": "ms-python.python:system",
-  "python.analysis.extraPaths": ["."]
+  "python.analysis.extraPaths": [
+    "."
+  ],
+  "python.terminal.useEnvFile": true
 }
