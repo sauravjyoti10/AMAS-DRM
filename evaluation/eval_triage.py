@@ -72,8 +72,21 @@ def _save_cache(cache: Dict) -> None:
         json.dump(cache, f)
 
 
-def evaluate(mode: str, online: bool, limit: int = 0) -> Dict:
-    data = load()[: limit or None]
+def evaluate(mode: str, online: bool, limit: int = 0, sample: int = 0) -> Dict:
+    data = load()
+    if sample:                                   # stratified by severity, fixed seed, so it is repeatable
+        import random
+        rng = random.Random(42)
+        by = {}
+        for x in data:
+            by.setdefault(x.severity, []).append(x)
+        picked = []
+        for sev in sorted(by):
+            k = max(1, round(sample * len(by[sev]) / len(data)))
+            picked += rng.sample(by[sev], min(k, len(by[sev])))
+        data = sorted(picked, key=lambda x: x.id)[:sample]
+    else:
+        data = data[: limit or None]
     settings = Settings(geocode_online=online)
     key_settings = get_settings()
     rows: List[Dict] = []
@@ -192,8 +205,9 @@ def main() -> None:
     ap.add_argument("--mode", choices=["rules", "gemini"], default="rules")
     ap.add_argument("--online", action="store_true", help="use the OpenStreetMap geocoder")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--sample", type=int, default=0, help="stratified random sample of N messages (seed 42)")
     a = ap.parse_args()
-    res = evaluate(a.mode, a.online, a.limit)
+    res = evaluate(a.mode, a.online, a.limit, a.sample)
     os.makedirs(RESULTS, exist_ok=True)
     tag = f"triage_{a.mode}{'_online' if a.online else ''}"
     with open(os.path.join(RESULTS, tag + ".json"), "w", encoding="utf-8") as f:
