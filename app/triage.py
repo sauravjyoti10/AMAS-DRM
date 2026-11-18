@@ -55,7 +55,7 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
         if not settings.gemini_api_key:
             return rule_based_triage(raw_sos)
         from google import genai  # imported lazily so tests and offline runs do not need the SDK
-        client = genai.Client(api_key=settings.gemini_api_key)
+        client = genai.Client(api_key=settings.gemini_api_key, http_options={"timeout": 20_000})  # ms: a stalled request fails and retries
 
     last_error: Optional[Exception] = None
     for attempt in range(MAX_ATTEMPTS):
