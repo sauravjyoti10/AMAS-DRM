@@ -1,0 +1,537 @@
+{
+ "mode": "gemini",
+ "online_geocoding": false,
+ "n_messages": 18,
+ "n_parse_failures": 0,
+ "severity": {
+  "accuracy": 0.8888888888888888,
+  "macro_precision": 0.8854166666666666,
+  "macro_recall": 0.875,
+  "macro_f1": 0.8606060606060606,
+  "per_class": {
+   "CRITICAL": {
+    "precision": 0.875,
+    "recall": 1.0,
+    "f1": 0.9333333333333333,
+    "support": 7
+   },
+   "HIGH": {
+    "precision": 1.0,
+    "recall": 0.8333333333333334,
+    "f1": 0.9090909090909091,
+    "support": 6
+   },
+   "MODERATE": {
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1": 0.8,
+    "support": 3
+   },
+   "LOW": {
+    "precision": 0.6666666666666666,
+    "recall": 1.0,
+    "f1": 0.8,
+    "support": 2
+   }
+  },
+  "confusion": {
+   "CRITICAL": {
+    "CRITICAL": 7,
+    "HIGH": 0,
+    "MODERATE": 0,
+    "LOW": 0
+   },
+   "HIGH": {
+    "CRITICAL": 1,
+    "HIGH": 5,
+    "MODERATE": 0,
+    "LOW": 0
+   },
+   "MODERATE": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MODERATE": 2,
+    "LOW": 1
+   },
+   "LOW": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MODERATE": 0,
+    "LOW": 2
+   }
+  },
+  "under_triage": 1,
+  "over_triage": 1,
+  "critical_recall": 1.0,
+  "critical_missed": 0,
+  "n_critical": 7
+ },
+ "casualties": {
+  "exact_match": 1.0,
+  "within_1": 1.0,
+  "mae": 0.0
+ },
+ "resources": {
+  "precision": 0.6842105263157895,
+  "recall": 1.0,
+  "f1": 0.8125000000000001
+ },
+ "location": {
+  "outcomes": {
+   "correct": 11,
+   "missed": 3,
+   "other_unresolved": 2,
+   "correct_unresolved": 2
+  },
+  "named_place_accuracy": 0.7857142857142857,
+  "wrong_pin_rate_named": 0.0,
+  "missed_rate_named": 0.21428571428571427,
+  "false_pin_rate_when_no_place_or_outside": 0.0,
+  "coords_exact_rate": 0.0,
+  "coords_error_m": {
+   "n": 0,
+   "mean": 0.0,
+   "median": 0.0,
+   "p95": 0.0,
+   "max": 0.0
+  },
+  "named_place_offset_m": {
+   "n": 11,
+   "mean": 0.0,
+   "median": 0.0,
+   "p95": 0.0,
+   "max": 0.0
+  },
+  "reported_uncertainty_m_when_correct": {
+   "n": 11,
+   "mean": 690.9090909090909,
+   "median": 700.0,
+   "p95": 850.0,
+   "max": 900.0
+  },
+  "other_places_resolved": 0,
+  "other_places_total": 2
+ },
+ "latency_ms": {
+  "n": 18,
+  "mean": 6975.705166677169,
+  "median": 5033.739600039553,
+  "p95": 21959.558709955298,
+  "max": 27902.963900007308
+ },
+ "rows": [
+  {
+   "id": 2,
+   "text": "Flash flood at Zoo Road Tiniali. 12 residents stranded on rooftops, water rising. Send rafts and drinking water!",
+   "latency_ms": 4257.992400089279,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 12,
+   "pred_casualties": 12,
+   "gold_resources": [
+    "Drinking Water",
+    "Inflatable Rafts"
+   ],
+   "pred_resources": [
+    "Drinking Water",
+    "Inflatable Rafts"
+   ],
+   "gold_place": "zoo road tiniali",
+   "pred_location_text": "Zoo Road Tiniali",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 400.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 8,
+   "text": "Six Mile flyover side: a house caved in, 3 children trapped inside. Help immediately.",
+   "latency_ms": 6188.375200028531,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 3,
+   "pred_casualties": 3,
+   "gold_resources": [
+    "First Aid Kits"
+   ],
+   "pred_resources": [
+    "First Aid Kits"
+   ],
+   "gold_place": "six mile",
+   "pred_location_text": "Six Mile flyover side",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "missed"
+   }
+  },
+  {
+   "id": 9,
+   "text": "Maligaon railway colony flooded, water above waist level, 10 families stranded. Need boats and food.",
+   "latency_ms": 5110.7983000110835,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 10,
+   "pred_casualties": 10,
+   "gold_resources": [
+    "Food Packets",
+    "Inflatable Rafts"
+   ],
+   "pred_resources": [
+    "Food Packets",
+    "Inflatable Rafts"
+   ],
+   "gold_place": "maligaon",
+   "pred_location_text": "Maligaon railway colony",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "missed"
+   }
+  },
+  {
+   "id": 15,
+   "text": "House collapsed at Ganeshguri Chariali. Two people under the rubble.",
+   "latency_ms": 2480.5695000104606,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 2,
+   "pred_casualties": 2,
+   "gold_resources": [
+    "First Aid Kits"
+   ],
+   "pred_resources": [
+    "First Aid Kits"
+   ],
+   "gold_place": "ganeshguri",
+   "pred_location_text": "Ganeshguri Chariali",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 600.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 16,
+   "text": "My mother is having a heart attack and the road to the hospital at Chandmari is submerged. Need rescue boat.",
+   "latency_ms": 5365.605599945411,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 1,
+   "pred_casualties": 1,
+   "gold_resources": [
+    "First Aid Kits",
+    "Inflatable Rafts"
+   ],
+   "pred_resources": [
+    "First Aid Kits",
+    "Inflatable Rafts"
+   ],
+   "gold_place": "chandmari",
+   "pred_location_text": "Chandmari",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 700.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 18,
+   "text": "URGENT: embankment breach near Beltola, water entering homes fast, 25 people trapped.",
+   "latency_ms": 27902.963900007308,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 25,
+   "pred_casualties": 25,
+   "gold_resources": [
+    "Inflatable Rafts"
+   ],
+   "pred_resources": [
+    "Drinking Water",
+    "Food Packets",
+    "Inflatable Rafts"
+   ],
+   "gold_place": "beltola",
+   "pred_location_text": "Beltola",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 800.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 30,
+   "text": "Two people injured after a tree fell on a scooter near Dispur. They are conscious. Need first aid.",
+   "latency_ms": 4614.804400014691,
+   "gold_severity": "HIGH",
+   "pred_severity": "HIGH",
+   "gold_casualties": 2,
+   "pred_casualties": 2,
+   "gold_resources": [
+    "First Aid Kits"
+   ],
+   "pred_resources": [
+    "First Aid Kits"
+   ],
+   "gold_place": "dispur",
+   "pred_location_text": "near Dispur",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 800.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 31,
+   "text": "Fire in a godown near Paltan Bazaar, firefighters have not arrived, no one inside as far as we know.",
+   "latency_ms": 4956.680900068022,
+   "gold_severity": "HIGH",
+   "pred_severity": "HIGH",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "paltan bazaar",
+   "pred_location_text": "godown near Paltan Bazaar",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 600.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 34,
+   "text": "Three people with minor injuries from a wall collapse at Chandmari, others are safe. Please send first aid kits.",
+   "latency_ms": 3828.158500022255,
+   "gold_severity": "HIGH",
+   "pred_severity": "HIGH",
+   "gold_casualties": 3,
+   "pred_casualties": 3,
+   "gold_resources": [
+    "First Aid Kits"
+   ],
+   "pred_resources": [
+    "First Aid Kits"
+   ],
+   "gold_place": "chandmari",
+   "pred_location_text": "Chandmari",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 700.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 35,
+   "text": "Flooded colony at Maligaon, 50 houses affected, no food since yesterday.",
+   "latency_ms": 5691.2274999776855,
+   "gold_severity": "HIGH",
+   "pred_severity": "HIGH",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [
+    "Food Packets"
+   ],
+   "pred_resources": [
+    "Drinking Water",
+    "Food Packets"
+   ],
+   "gold_place": "maligaon",
+   "pred_location_text": "Maligaon",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 900.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 56,
+   "text": "Waterlogging at Ganeshguri since morning, shops flooded, traffic completely jammed.",
+   "latency_ms": 3886.0948000801727,
+   "gold_severity": "MODERATE",
+   "pred_severity": "MODERATE",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "ganeshguri",
+   "pred_location_text": "Ganeshguri",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 600.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 63,
+   "text": "Streetlights are not working on Zoo Road after the storm.",
+   "latency_ms": 5319.547999999486,
+   "gold_severity": "MODERATE",
+   "pred_severity": "LOW",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "zoo road",
+   "pred_location_text": "Zoo Road",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 800.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 73,
+   "text": "Is the Khanapara road open for travel tomorrow?",
+   "latency_ms": 3876.1270999675617,
+   "gold_severity": "LOW",
+   "pred_severity": "LOW",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "khanapara",
+   "pred_location_text": "Khanapara road",
+   "location": {
+    "resolved": true,
+    "source": "geocoded",
+    "uncertainty_m": 700.0,
+    "error_m": 0.0,
+    "outcome": "correct"
+   }
+  },
+  {
+   "id": 75,
+   "text": "Stray dogs gathering near the Beltola relief point, no one hurt.",
+   "latency_ms": 7665.1262999512255,
+   "gold_severity": "LOW",
+   "pred_severity": "LOW",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "beltola",
+   "pred_location_text": "Beltola relief point",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "missed"
+   }
+  },
+  {
+   "id": 83,
+   "text": "Landslide at Narengi, 2 houses damaged, no one hurt.",
+   "latency_ms": 20910.722499946132,
+   "gold_severity": "HIGH",
+   "pred_severity": "HIGH",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "OTHER",
+   "pred_location_text": "Narengi",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "other_unresolved"
+   }
+  },
+  {
+   "id": 84,
+   "text": "Water logging at Bhangagarh since morning.",
+   "latency_ms": 3290.485900011845,
+   "gold_severity": "MODERATE",
+   "pred_severity": "MODERATE",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [],
+   "gold_place": "OTHER",
+   "pred_location_text": "Bhangagarh",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "other_unresolved"
+   }
+  },
+  {
+   "id": 100,
+   "text": "Help! Water is entering our house and the children are scared.",
+   "latency_ms": 4100.484700058587,
+   "gold_severity": "HIGH",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 0,
+   "pred_casualties": 0,
+   "gold_resources": [],
+   "pred_resources": [
+    "Inflatable Rafts"
+   ],
+   "gold_place": null,
+   "pred_location_text": null,
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "correct_unresolved"
+   }
+  },
+  {
+   "id": 108,
+   "text": "Flood at Silchar town, 20 people stranded on a roof.",
+   "latency_ms": 6116.927499999292,
+   "gold_severity": "CRITICAL",
+   "pred_severity": "CRITICAL",
+   "gold_casualties": 20,
+   "pred_casualties": 20,
+   "gold_resources": [
+    "Inflatable Rafts"
+   ],
+   "pred_resources": [
+    "Drinking Water",
+    "Food Packets",
+    "Inflatable Rafts"
+   ],
+   "gold_place": "OUTSIDE",
+   "pred_location_text": "Silchar town",
+   "location": {
+    "resolved": false,
+    "source": "unknown",
+    "uncertainty_m": null,
+    "error_m": null,
+    "outcome": "correct_unresolved"
+   }
+  }
+ ]
+}
