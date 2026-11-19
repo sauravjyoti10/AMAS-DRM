@@ -359,6 +359,21 @@ def rule_based_triage(raw_sos: str) -> ParsedIncident:
         resources.append(ResourceRequirement(item_name="Drinking Water", quantity=max(1, people or 10)))
     if re.search(r"food|hungry|ration|meal", raw):
         resources.append(ResourceRequirement(item_name="Food Packets", quantity=max(1, people or 10)))
+    
+    if re.search(r"emergency medical kit|medical kits?", raw):
+        match = re.search(
+            r"\b(\d+)\s+emergency medical kits?\b",
+            raw
+        )
+        quantity = int(match.group(1)) if match else 1
+
+        resources.append(
+            ResourceRequirement(
+                item_name="Emergency Medical Kits",
+                quantity=quantity
+            )
+        )
+    
 
     kind = next((k for k in ("flood", "landslide", "collapse", "fire") if k in raw), "emergency")
     location = _extract_location_text(raw_sos)

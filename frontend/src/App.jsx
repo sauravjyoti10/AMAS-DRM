@@ -276,6 +276,7 @@ export default function App() {
           Active Emergency Incidents ({incidents.length})
         </h3>
 
+       
         <div style={{ flex: 1 }}>
           {incidents.map((item) => {
             const inc = item.incident || {};
@@ -288,11 +289,12 @@ export default function App() {
                 className={`incident-card ${inc.severity || 'LOW'}`}
                 onClick={() => showFocus(item)}
               >
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                   <span className={`badge badge-${inc.severity || 'LOW'}`}>{inc.severity || 'UNKNOWN'}</span>
                   <span style={{ fontSize: '0.75rem', color: item.status === 'failed' ? '#ef4444' : '#94a3b8' }}>
                     Status: {item.status}
-                  </span>
+                  </span>const inc = item.incident || {};
                 </div>
 
                 <p style={{ fontSize: '0.85rem', marginBottom: '0.4rem' }}>"{item.raw_sos}"</p>
@@ -309,6 +311,21 @@ export default function App() {
                     {located ? ` · ${inc.latitude.toFixed(5)}, ${inc.longitude.toFixed(5)}` : ''}
                   </p>
                 )}
+
+
+                {inc.needed_resources && inc.needed_resources.length > 0 && (
+                  <div className="resource-info">
+                    <strong>📦 Resources Required</strong>
+                    <div className="chips">
+                      {inc.needed_resources.map((resource, index) => (
+                        <span className="chip" key={`${resource.item_name}-${index}`}>
+                          {resource.item_name}: {resource.quantity}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
 
                 {route && (
                   <div className="route-info">

@@ -3,7 +3,15 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, Field, model_validator
 
 # Closed vocabulary so LLM output always matches depot inventory keys.
-ItemName = Literal["First Aid Kits", "Inflatable Rafts", "Food Packets", "Drinking Water"]
+
+ItemName = Literal[
+    "First Aid Kits",
+    "Inflatable Rafts",
+    "Food Packets",
+    "Drinking Water",
+    "Emergency Medical Kits"
+]
+
 Severity = Literal["CRITICAL", "HIGH", "MODERATE", "LOW"]
 
 
