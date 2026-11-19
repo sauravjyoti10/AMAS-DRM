@@ -13,7 +13,7 @@ from app.graph import AgentState, apply_manual_location, dispatch, orchestrator,
 from app.hazards import get_hazard_store
 from app.routing import NoRouteError, OutOfCoverageError, RoadNetwork
 from app.schemas import HazardCreate, RouteRequest, SOSRequest
-from app.triage import TriageError, resolve_location, run_triage
+from app.triage import TriageError, resolve_location, rule_based_triage, run_triage
 
 app = FastAPI(
     title="AMAS-DRM API",
@@ -126,8 +126,9 @@ async def delete_hazard(hazard_id: str):
 async def triage_only(request: SOSRequest):
     try:
         parsed = await run_in_threadpool(run_triage, request.sos_message)
-    except TriageError as exc:
-        raise HTTPException(status_code=502, detail=str(exc))
+    except TriageError:
+        # Gemini slow or down: the rule-based parser still answers, so a message is never held up.
+        parsed = rule_based_triage(request.sos_message)
     return await run_in_threadpool(resolve_location, parsed)
 
 

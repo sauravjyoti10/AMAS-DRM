@@ -3,6 +3,7 @@ import pytest
 
 from app.config import Settings
 from app.schemas import ParsedIncident
+import app.triage as triage_mod
 from app.triage import TriageError, resolve_location, run_triage
 
 VALID = {
@@ -48,6 +49,37 @@ def incident(**overrides) -> ParsedIncident:
 
 
 # ---------- run_triage ----------
+@pytest.fixture(autouse=True)
+def _no_real_sleep(monkeypatch):
+    """Retries pause between attempts; tests run on a fake clock so they finish instantly."""
+    clock = [0.0]
+
+    class FakeTime:
+        sleep = staticmethod(lambda s: clock.__setitem__(0, clock[0] + s))
+        monotonic = staticmethod(lambda: clock[0])
+        time = staticmethod(lambda: clock[0])
+        perf_counter = staticmethod(lambda: clock[0])
+
+    monkeypatch.setattr(triage_mod, "time", FakeTime)
+    return clock
+
+
+def test_run_triage_stops_inside_time_budget(_no_real_sleep):
+    client = FakeClient(*[RuntimeError("503 UNAVAILABLE")] * 10)
+    settings = Settings(gemini_timeout_s=5.0, gemini_budget_s=8.0)
+    with pytest.raises(TriageError):
+        run_triage("sos", client=client, settings=settings)
+    assert client.models.calls == 3          # attempts at 0 s, 1 s and 3 s; a fourth could not finish by 8 s
+    assert _no_real_sleep[0] <= settings.gemini_budget_s
+
+
+def test_run_triage_does_not_retry_daily_quota():
+    client = FakeClient(*[RuntimeError("429 RESOURCE_EXHAUSTED GenerateRequestsPerDayPerProjectPerModel")] * 5)
+    with pytest.raises(TriageError):
+        run_triage("sos", client=client, settings=Settings())
+    assert client.models.calls == 1
+
+
 def test_run_triage_parses_valid_json():
     client = FakeClient(json.dumps(VALID))
     result = run_triage("sos", client=client, settings=Settings())

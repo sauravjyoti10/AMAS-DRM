@@ -21,8 +21,8 @@ from app.geo import haversine_m
 from app.schemas import ParsedIncident, ResourceRequirement, TriageResult
 
 GEO_SUFFIX = ", Guwahati, Assam, India"
-MAX_ATTEMPTS = 5          # Gemini 503/429 are temporary, so retry with a growing pause
-RETRY_BASE_S = 2.0
+MAX_ATTEMPTS = 5          # upper limit; the time budget (settings.gemini_budget_s) usually stops retries sooner
+RETRY_BASE_S = 1.0        # pauses of 1, 2, 4 ... seconds between attempts
 
 SYSTEM_PROMPT = """You are the triage agent of a disaster-management system for Guwahati, Assam, India.
 Read one raw SOS message and fill the schema.
@@ -55,9 +55,15 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
         if not settings.gemini_api_key:
             return rule_based_triage(raw_sos)
         from google import genai  # imported lazily so tests and offline runs do not need the SDK
-        client = genai.Client(api_key=settings.gemini_api_key, http_options={"timeout": 20_000})  # ms: a stalled request fails and retries
+        timeout_ms = int(settings.gemini_timeout_s * 1000)
+        try:  # one attempt per request: our own loop does the retrying inside the time budget
+            client = genai.Client(api_key=settings.gemini_api_key,
+                                  http_options={"timeout": timeout_ms, "retry_options": {"attempts": 1}})
+        except Exception:  # older SDK without retry_options
+            client = genai.Client(api_key=settings.gemini_api_key, http_options={"timeout": timeout_ms})
 
     last_error: Optional[Exception] = None
+    started = time.monotonic()
     for attempt in range(MAX_ATTEMPTS):
         try:
             resp = client.models.generate_content(
@@ -76,8 +82,10 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
             msg = str(exc)
             if "PerDay" in msg or "NOT_FOUND" in msg or "API key" in msg:
                 break  # daily quota, wrong model name or bad key: waiting will not help
-            if attempt < MAX_ATTEMPTS - 1:
-                time.sleep(RETRY_BASE_S * (2 ** attempt))  # 2, 4, 8, 16 s
+            delay = RETRY_BASE_S * (2 ** attempt)
+            if attempt == MAX_ATTEMPTS - 1 or time.monotonic() - started + delay + settings.gemini_timeout_s > settings.gemini_budget_s:
+                break  # another attempt could not finish inside the time budget
+            time.sleep(delay)
     raise TriageError(f"Triage failed: {last_error}")
 
 
