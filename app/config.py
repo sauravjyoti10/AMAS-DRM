@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     geocode_online: bool = True
     geocode_user_agent: str = "amas_drm_geocoder"
     geocode_timeout_s: float = 6.0
+    geocode_budget_s: float = 4.0   # all online lookups for one message together; then the gazetteer answers
     geocode_cache_path: str = "data/geocode_cache.json"
 
     # Active hazard zones (flood / landslide polygons) are kept here so they survive a restart.

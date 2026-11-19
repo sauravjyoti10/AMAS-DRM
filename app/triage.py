@@ -239,7 +239,7 @@ def _cache_save(path: str, cache: dict) -> None:
 MISS_TTL_S = 24 * 3600   # "not found" answers are re-checked after a day (OSM data and our query wording both improve)
 
 
-def _nominatim(phrase: str, settings: Settings) -> Optional[Tuple[float, float, float]]:
+def _nominatim(phrase: str, settings: Settings, deadline: Optional[float] = None) -> Optional[Tuple[float, float, float]]:
     """OpenStreetMap lookup restricted to the Guwahati bounding box. Cached on disk. -> (lat, lon, uncertainty_m)
 
     The bounding box already limits results to Guwahati, so the bare phrase is tried first: adding
@@ -257,11 +257,15 @@ def _nominatim(phrase: str, settings: Settings) -> Optional[Tuple[float, float, 
         loc = None
         try:
             from geopy.geocoders import Nominatim
-            geo = Nominatim(user_agent=settings.geocode_user_agent, timeout=settings.geocode_timeout_s)
             for query in (phrase, f"{phrase}, Guwahati"):
                 wait = 1.1 - (time.time() - _last_nominatim_call)  # Nominatim usage policy: max 1 request/second
                 if wait > 0:
                     time.sleep(wait)
+                left = None if deadline is None else deadline - time.monotonic()
+                if left is not None and left < 1.0:
+                    return None  # time budget used up: not a real miss, so nothing is cached
+                geo = Nominatim(user_agent=settings.geocode_user_agent,
+                                timeout=settings.geocode_timeout_s if left is None else min(settings.geocode_timeout_s, left))
                 _last_nominatim_call = time.time()
                 loc = geo.geocode(
                     query,
@@ -286,12 +290,14 @@ def _nominatim(phrase: str, settings: Settings) -> Optional[Tuple[float, float, 
 
 def make_default_geocoder(settings: Settings) -> Callable[[str], Optional[Tuple[float, float, float]]]:
     """OSM first (precise landmarks), gazetteer as fallback and as a sanity check on OSM answers."""
+    deadline = time.monotonic() + settings.geocode_budget_s   # one message: online lookups share this budget
+
     def geocode(query: str):
         phrase = query[: -len(GEO_SUFFIX)] if query.endswith(GEO_SUFFIX) else query
         anchors = [a for a in (gazetteer.lookup(n) for n, _, _ in gazetteer.find_places(phrase)) if a]
         anchors = [a for a in anchors if a[0] != "guwahati"]
 
-        live = _nominatim(phrase, settings) if settings.geocode_online else None
+        live = _nominatim(phrase, settings, deadline) if settings.geocode_online and time.monotonic() < deadline else None
         if live:
             # A result far from a locality named in the same sentence is a mis-hit (same-name place elsewhere).
             if not anchors or min(haversine_m(live[0], live[1], a[1], a[2]) - a[3] for a in anchors) <= 2500:

@@ -297,3 +297,13 @@ def test_legacy_null_cache_entries_are_retried(monkeypatch, tmp_path):
     path.write_text('{"khanapara bus stand": null}')
     _fake_geopy(monkeypatch, [_FakeLoc()])
     assert triage_mod._nominatim("Khanapara bus stand", Settings(geocode_cache_path=str(path))) is not None
+
+
+def test_geocoder_skips_online_lookup_when_budget_is_used_up(monkeypatch):
+    """A slow OpenStreetMap must not hold an SOS up: after the budget the gazetteer answers at once."""
+    def boom(*a, **k):
+        raise AssertionError("online lookup must not run")
+    monkeypatch.setattr(triage_mod, "_nominatim", boom)
+    geocode = triage_mod.make_default_geocoder(Settings(geocode_online=True, geocode_budget_s=0.0))
+    hit = geocode("Khanapara bus stand" + triage_mod.GEO_SUFFIX)
+    assert hit is not None and abs(hit[0] - 26.125) < 0.01
