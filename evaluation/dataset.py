@@ -178,14 +178,28 @@ _RAW = [
 ]
 
 
-def load() -> List[Sample]:
+def _final_severity() -> Dict[int, str]:
+    """Severity labels agreed by two annotators for the messages they first disagreed on."""
+    import json
+    import os
+    path = os.path.join(os.path.dirname(__file__), "annotation", "severity_adjudication.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return {int(k): v for k, v in json.load(f)["final"].items()}
+    except (OSError, ValueError, KeyError):
+        return {}
+
+
+def load(original: bool = False) -> List[Sample]:
+    """The labelled messages. By default severity uses the adjudicated labels; original=True gives the first annotator's."""
+    final = {} if original else _final_severity()
     out: List[Sample] = []
     for i, row in enumerate(_RAW, start=1):
         text, sev, cas, place, res = row[:5]
         lat, lon = (row[5], row[6]) if len(row) > 5 else (None, None)
         if place == "OTHER" and i in GOLD_COORDS:
             lat, lon = GOLD_COORDS[i]
-        out.append(Sample(i, text, sev, cas, place, tuple(res), lat, lon))
+        out.append(Sample(i, text, final.get(i, sev), cas, place, tuple(res), lat, lon))
     return out
 
 

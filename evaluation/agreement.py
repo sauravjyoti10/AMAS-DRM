@@ -27,7 +27,7 @@ def kappas(a, b):
 
 
 def main(path):
-    gold = {s.id: s for s in load()}
+    gold = {s.id: s for s in load(original=True)}
     with open(path, encoding="utf-8-sig") as f:
         rows = list(csv.reader(f))[1:]
     lab = {int(r[0]): (r[2].strip().upper(), int(r[3])) for r in rows if r and r[0]}

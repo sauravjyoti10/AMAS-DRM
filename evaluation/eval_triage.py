@@ -77,9 +77,10 @@ def evaluate(mode: str, online: bool, limit: int = 0, sample: int = 0) -> Dict:
     if sample:                                   # stratified by severity, fixed seed, so it is repeatable
         import random
         rng = random.Random(42)
+        orig = {x.id: x.severity for x in load(original=True)}   # same sample as before the labels were adjudicated
         by = {}
         for x in data:
-            by.setdefault(x.severity, []).append(x)
+            by.setdefault(orig[x.id], []).append(x)
         picked = []
         for sev in sorted(by):
             k = max(1, round(sample * len(by[sev]) / len(data)))
