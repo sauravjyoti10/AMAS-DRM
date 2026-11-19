@@ -46,13 +46,42 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", text.lower())).strip()
 
 
+# Words that only describe a spot inside a named locality ("Six Mile flyover side"). If these are the only
+# extra words, the locality's point is still a fair answer, with a wider uncertainty circle.
+GENERIC_WORDS = {
+    "flyover", "side", "area", "railway", "colony", "relief", "point", "camp", "bus", "stand", "stop", "terminal",
+    "market", "junction", "bridge", "overbridge", "underpass", "road", "lane", "gate", "station", "hospital",
+    "school", "college", "temple", "park", "ground", "stadium", "petrol", "pump", "chariali", "tiniali", "ghat",
+    "near", "at", "in", "of", "the", "main", "colony", "locality", "neighbourhood", "neighborhood",
+}
+RELAXED_EXTRA_UNCERTAINTY_M = 300.0
+
+
 def lookup(name: str) -> Optional[Tuple[str, float, float, float]]:
-    """Exact (normalised) match -> (canonical_name, lat, lon, uncertainty_m)."""
+    """(canonical_name, lat, lon, uncertainty_m) for a place name.
+
+    An exact (normalised) match is preferred. Otherwise a single known locality plus only generic
+    landmark words ("Maligaon railway colony") matches with 300 m extra uncertainty. A phrase with any
+    other word ("Khanapara Veterinary College") does not match, so no wrong pin is invented.
+    """
     key = normalize(name)
     key = ALIASES.get(key, key)
     if key in GAZETTEER:
         lat, lon, unc = GAZETTEER[key]
         return key, lat, lon, unc
+    found = find_places(name)
+    places = {canon for canon, _, _ in found}
+    if len(places) == 1:
+        norm = normalize(name)
+        covered = [False] * len(norm)
+        for _, start, end in found:
+            for i in range(start, end):
+                covered[i] = True
+        rest = "".join(ch if not covered[i] else " " for i, ch in enumerate(norm)).split()
+        if rest and all(w in GENERIC_WORDS for w in rest):
+            canon = next(iter(places))
+            lat, lon, unc = GAZETTEER[canon]
+            return canon, lat, lon, unc + RELAXED_EXTRA_UNCERTAINTY_M
     return None
 
 

@@ -60,3 +60,18 @@ def test_find_places_prefers_longest_match():
 ])
 def test_place_queries(text, expected):
     assert place_queries(text) == expected
+
+
+def test_gazetteer_relaxed_match_only_with_generic_words():
+    for phrase, canon in [("Six Mile flyover side", "six mile"), ("Maligaon railway colony", "maligaon"),
+                          ("Beltola relief point", "beltola"), ("Khanapara bus stand", "khanapara")]:
+        hit = gazetteer.lookup(phrase)
+        assert hit and hit[0] == canon, phrase
+    exact = gazetteer.lookup("Maligaon")
+    relaxed = gazetteer.lookup("Maligaon railway colony")
+    assert relaxed[3] == exact[3] + gazetteer.RELAXED_EXTRA_UNCERTAINTY_M
+    # unknown words, two localities, or no locality: no pin
+    assert gazetteer.lookup("Khanapara Veterinary College") is None
+    assert gazetteer.lookup("Guwahati airport") is None
+    assert gazetteer.lookup("Maligaon and Jalukbari") is None
+    assert gazetteer.lookup("railway colony") is None
