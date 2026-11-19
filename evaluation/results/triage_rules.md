@@ -40,7 +40,7 @@ Casualties: exact match 80.3%, within +-1 91.5%, mean absolute error 0.79. Resou
 - Places not in the gazetteer: 0 of 12 resolved (online geocoder off, so unresolved is expected).
 - Reported uncertainty when correct: median +-800 m.
 
-### Latency per message (parse + locate): median 0.30 ms, p95 0.86 ms.
+### Latency per message (parse + locate): median 0.27 ms, p95 0.52 ms.
 
 ### Error analysis (3 messages with a severity or location error)
 - #56 gold HIGH / predicted MODERATE; location: correct. "Waterlogging at Ganeshguri since morning, shops flooded, traffic completely jammed."
