@@ -80,8 +80,8 @@ def run_triage(raw_sos: str, client=None, settings: Optional[Settings] = None) -
         except Exception as exc:  # bad JSON, schema violation, API/network error
             last_error = exc
             msg = str(exc)
-            if "PerDay" in msg or "NOT_FOUND" in msg or "API key" in msg:
-                break  # daily quota, wrong model name or bad key: waiting will not help
+            if "PerDay" in msg or "NOT_FOUND" in msg or "API key" in msg or "INVALID_ARGUMENT" in msg:
+                break  # daily quota, wrong model name, bad key or bad request: waiting will not help
             delay = RETRY_BASE_S * (2 ** attempt)
             if attempt == MAX_ATTEMPTS - 1 or time.monotonic() - started + delay + settings.gemini_timeout_s > settings.gemini_budget_s:
                 break  # another attempt could not finish inside the time budget

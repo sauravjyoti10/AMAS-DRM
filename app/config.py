@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-3.1-flash-lite"
     # Time limits for the Gemini call. If Gemini is slow or down, triage falls back to the rule-based parser
     # so an SOS message is never held up: one request may take gemini_timeout_s, all attempts together gemini_budget_s.
-    gemini_timeout_s: float = 5.0
-    gemini_budget_s: float = 8.0
+    gemini_timeout_s: float = 10.0   # Google rejects request deadlines shorter than 10 s
+    gemini_budget_s: float = 12.0
 
     postgres_user: str = "amas"
     postgres_password: str = ""
