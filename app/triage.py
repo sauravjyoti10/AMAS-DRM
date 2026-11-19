@@ -97,7 +97,7 @@ _PEOPLE = (r"(?:casualt\w*|people|persons?|travell?ers|passengers|residents|vill
 _LANDMARK_WORDS = (r"bus\s*stand|bus\s*stop|bus\s*terminus|bus\s*station|isbt|tiniali|chariali|chowk|"
                    r"junction|flyover|bridge|market|bazaar|bazar|station|gate|petrol\s*pump|hospital|"
                    r"school|college|temple|stadium|ground|park|colony|road|path|lane")
-_CRITICAL = ("critical", "collapse", "landslide", "trapped", "stranded", "submerged", "drown",
+_CRITICAL = ("critical", "collapse", "trapped", "stranded", "submerged", "drown",
              "rising", "rooftop", "life-threatening", "immediately")
 _HIGH = ("flood", "waterlogging", "injur", "overflow", "fire", "washed away")
 _MODERATE = ("electricity", "power cut", "knee-deep", "blocked", "fallen tree", "tree fell")
@@ -121,12 +121,46 @@ def parse_coordinates(text: str) -> Optional[Tuple[float, float]]:
     return lat, lon
 
 
+
 def _count_people(raw: str) -> int:
-    m = re.search(rf"\b(\d{{1,4}})\s+(?:more\s+|injured\s+|trapped\s+|stranded\s+|elderly\s+)?{_PEOPLE}", raw, re.I)
-    if m:
-        return int(m.group(1))
-    m = re.search(rf"\b({'|'.join(_NUM_WORDS)})\s+(?:more\s+|injured\s+|trapped\s+)?{_PEOPLE}", raw, re.I)
-    return _NUM_WORDS[m.group(1).lower()] if m else 0
+    """Extract an explicitly stated number of people from an SOS message."""
+
+    number_pattern = (
+        r"(?:\d{1,4}|"
+        + "|".join(_NUM_WORDS.keys())
+        + r")"
+    )
+
+    people_words = (
+        r"people|persons?|travell?ers|passengers|residents|villagers|"
+        r"victims|children|kids|students|families|workers|adults?|"
+        r"men|women|casualt\w*"
+    )
+
+    patterns = [
+        # Examples: 4 people, two children, 3 injured people
+        rf"\b({number_pattern})\s+(?:more\s+|injured\s+|trapped\s+|stranded\s+|elderly\s+)?(?:{people_words})\b",
+
+        # Examples: 4 injured, two trapped
+        rf"\b({number_pattern})\s+(?:injured|trapped|stranded|unconscious)\b",
+
+        # Examples: with 4 inside, 2 trapped inside
+        rf"\b(?:with|and|of)\s+({number_pattern})\s+(?:people\s+)?inside\b",
+
+        # Example: car with 4 inside
+        rf"\b({number_pattern})\s+inside\b",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, raw, re.I)
+        if match:
+            value = match.group(1).lower()
+            if value.isdigit():
+                return int(value)
+            return _NUM_WORDS.get(value, 0)
+
+    return 0
+
 
 
 def _extract_location_text(raw: str) -> Optional[str]:
@@ -140,13 +174,171 @@ def _extract_location_text(raw: str) -> Optional[str]:
                   raw, re.I)
     return m.group(1).strip() if m else None
 
+def _normalize_sos(text: str) -> str:
+    """Normalize common informal SOS spelling and abbreviations."""
+    text = text.lower()
+
+    replacements = {
+        "flud": "flood",
+        "pani": "water",
+        "bijli": "electricity",
+        "ppl": "people",
+        "strnded": "stranded",
+        "plz": "please",
+        "fase hai": "trapped",
+        "fase hain": "trapped",
+        "fase": "trapped",
+    }
+
+    for old, new in replacements.items():
+        text = re.sub(rf"\b{re.escape(old)}\b", new, text)
+
+    return text
 
 def rule_based_triage(raw_sos: str) -> ParsedIncident:
     """Keyword/regex triage used when Gemini is not configured or fails."""
-    raw = raw_sos.lower()
+    raw = _normalize_sos(raw_sos)
     casualties = _count_people(raw_sos)
 
-    if any(w in raw for w in _CRITICAL) or casualties >= 3:
+    
+    # Immediate life-threatening situations
+    critical_patterns = [
+        # Landslide emergencies involving buried, missing, or trapped people
+        r"\blandslide\b.*\b(?:people|persons|passengers|students|workers)\b.*\b(?:buried|missing|trapped)\b",
+        r"\blandslide\b.*\b(?:bus|vehicle)\b.*\bpartially buried\b",
+        r"\bpartially buried\b.*\b(?:passengers|people)\b",
+        r"\blandslide\b.*\b(?:students|people|persons)\b.*\bunder the mud\b",
+        r"\blandslide\b.*\b(?:people|persons)\b.*\b(?:hurt|injured)\b",
+        r"\blandslide\b.*\b\d+\s+(?:people|persons)\s+(?:hurt|injured)\b",
+
+        # Additional wording variations
+        r"\b\d+\s+(?:people|persons)\s+buried\b.*\blandslide\b",
+        r"\b(?:people|persons|passengers|students)\b.*\b(?:buried|trapped|missing)\b.*\b(?:landslide|mud|debris)\b",
+        r"\b(?:landslide|mudslide)\b.*\b(?:crushed|buried)\b.*\b(?:people|persons|passengers|shops|houses)\b", 
+
+        # Restore general life-threatening emergency rules
+        r"\bswept away\b",
+        r"\bdrowning\b|\bdrown(?:ed|ing)?\b",
+        r"\bsubmerged\b",
+        r"\btrapped\b",
+        r"\bunconscious\b",
+        r"\bnot breathing\b",
+        r"\blife[- ]threatening\b",
+        r"\bpeople inside\b.*\bfire\b",
+        r"\bfire\b.*\bpeople inside\b",
+        r"\bpregnant\b.*\bin labour\b.*\bambulance\b",
+        r"\bdiabetic\b.*\binsulin\b.*\b(?:cannot|can't|unable)\b",   
+
+        # Structural collapse with people trapped
+        r"\b(?:wall|roof|house|building|scaffolding)\b.*\bcollapsed?\b.*\b(?:trapped|buried|bleeding)\b",
+        r"\bcollapse\b.*\b\d+\s+(?:workers|people|persons)\b.*\btrapped\b",
+        r"\b(?:workers|people|persons)\b.*\btrapped\b.*\b(?:collapse|debris|rubble)\b",
+
+        # People swept away by water
+        r"\bswept away\b.*\b(?:car|vehicle|people|person|man|woman|river)\b",
+        r"\b(?:man|woman|person|people)\b.*\bswept away\b",
+
+        # Medical emergencies
+        r"\bnot breathing\b",
+        r"\bunconscious\b",
+        r"\b(?:gas leak|gas leakage)\b.*\b\d*\s*(?:people|persons)\b.*\bunconscious\b",
+
+        # Fire with people inside
+        r"\bfire\b.*\b(?:people|persons|workers)\b.*\binside\b",
+        r"\b(?:people|persons|workers)\b.*\binside\b.*\bfire\b",
+
+        # Pregnancy emergency with blocked ambulance access
+        r"\bpregnant\b.*\bin labour\b.*\bambulance\b.*\b(?:stuck|blocked)\b",      
+
+        # People in immediate danger from floodwater
+        r"\bboat\s+capsized\b",
+        r"\bpeople\s+in\s+the\s+water\b",
+        r"\bin\s+the\s+water\b.*\b(?:help|rescue|boat)\b",
+        r"\bwater\s+entering\s+(?:the\s+)?car\b",
+        r"\bwater\s+inside\s+(?:the\s+)?car\b",
+        r"\bwater\s+rising\s+(?:inside|around)\b",
+        r"\bon\s+(?:the\s+)?roof\b",
+        r"\b(?:people|persons|families)\s+on\s+(?:the\s+)?(?:roof|rooftop)\b",
+        r"\bstranded\b.*\b(?:roof|rooftop|water|flood)\b",
+
+        # Fire with people escaping
+        r"\bpeople\s+jumping\s+out\b",
+
+        # Flood-related medical emergency
+        r"\bdiabet\w*\b.*\binsulin\b.*\b(?:flood|trapped|cannot|can't|unable)\b",
+        r"\binsulin\b.*\b(?:cannot|can't|unable)\b.*\b(?:leave|get out|reach)\b",
+
+        # People trapped inside a building or vehicle
+        r"\b(?:first floor|ground floor)\b.*\b(?:cannot|can't|unable)\b.*\b(?:leave|escape|get out)\b",
+        r"\bwater\b.*\b(?:trapped|stuck)\b.*\b(?:car|vehicle)\b",
+                # Multiple people trapped in a vehicle with communication failure
+        r"\bno signal\b.*\b(?:stuck|trapped)\b.*\b(?:car|vehicle)\b",
+        r"\b(?:stuck|trapped)\b.*\b(?:car|vehicle)\b.*\bno signal\b",
+
+        # Multiple people stranded and requesting rescue during flooding
+        r"\bflood\b.*\b(?:people|persons|families)\b.*\bstranded\b",
+        r"\bstranded\b.*\b(?:send|need|please send)\b.*\b(?:boat|raft|rescue)\b",
+
+        # House surrounded by water with people trapped
+        r"\bhouse\b.*\bsurrounded by water\b",
+        r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve)\b.*\btrapped\b.*\b(?:water|flood)\b",
+
+    ]
+
+    # Serious injuries or significant property damage
+    high_patterns = [
+    # Injuries and medical emergencies
+    r"\b(?:deep cut|bleeding|broken arm|fracture|fractures)\b",
+    r"\b(?:burns|burn injuries|serious injur\w*)\b",
+    r"(?<!no )(?<!nobody )(?<!no one )(?<!none )\b(?:injured|injuries|casualties|hurt)\b",
+    r"\b(?:first aid|medical help)\b",
+
+    # Serious incidents involving electricity
+    r"\b(?:electricity|power)\b.*\b(?:pole|wire|wires)\b.*\b(?:fell|fallen|down|live|sparking|fire)\b",
+    r"\b(?:pole|wire|wires)\b.*\b(?:fell|fallen|down|live)\b",
+    r"\blive wires?\b",
+
+    # Floodwater entering buildings or trapping vehicles
+    r"\bwater\b.*\bentering\b.*\b(?:house|home|building)\b",
+    r"\bdrain overflow\b.*\bflood(?:ing)?\s+(?:the\s+)?houses?\b",
+    r"\b(?:car|vehicle)\b.*\bstuck\b.*\bwater\b",
+    r"\bwater\b.*\b(?:car|vehicle)\b.*\bstuck\b",
+    r"\bunderpass\b.*\b(?:full of water|flooded)\b",
+
+    # Property damage and serious disruption
+    r"\b(?:exploded|explosion)\b",
+    r"\b(?:houses?|homes?) damaged\b",
+    r"\b(?:families|people)\b.*\b(?:cut off|moved to|without food|without water)\b",
+    r"\b(?:landslide|collapse|collapsed)\b.*\b(?:house|houses|home|homes|damage|damaged|cracks)\b",
+    r"\b(?:wall|building|roof)\b.*\bcollapsed\b",
+]
+
+    # General disruption without an immediate threat to life
+    moderate_patterns = [
+    r"\bwaterlogging\b|\bwater logging\b",
+    r"\bwaterlogged\b",
+    r"\b(?:road|roads|lane)\b.*\bblocked\b",
+    r"\bdebris\b.*\bblocking\b",
+    r"\bdrain overflow\b",
+    r"\bmobile network\b.*\bdown\b",
+    r"\b(?:electricity|power)\b.*\b(?:outage|cut|down)\b",
+    r"\b(?:water supply|streetlights?)\b.*\b(?:stopped|not working|down)\b",
+    r"\bbuses?\b.*\b(?:late|delayed)\b",
+    r"\b(?:vehicles?|two-wheelers?)\b.*\b(?:cannot|can't|unable)\b.*\bpass\b",
+    r"\bvehicles?\b.*\bstuck\b",
+    r"\btraffic\b.*\b(?:jammed|blocked|stuck)\b",
+    r"\bshops?\b.*\bflooded\b",
+    r"\b(?:children|kids)\b.*\b(?:fever|cough)\b",
+]
+
+    if any(re.search(pattern, raw) for pattern in critical_patterns):
+        severity = "CRITICAL"
+    elif any(re.search(pattern, raw) for pattern in high_patterns):
+        severity = "HIGH"
+    elif any(re.search(pattern, raw) for pattern in moderate_patterns):
+        severity = "MODERATE"
+    elif any(w in raw for w in _CRITICAL):
+        # Retain existing emergency keywords as a fallback.
         severity = "CRITICAL"
     elif any(w in raw for w in _HIGH):
         severity = "HIGH"
@@ -154,6 +346,7 @@ def rule_based_triage(raw_sos: str) -> ParsedIncident:
         severity = "MODERATE"
     else:
         severity = "LOW"
+
 
     resources: List[ResourceRequirement] = []
     people = max(casualties, 0)

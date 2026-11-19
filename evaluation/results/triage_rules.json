@@ -4,54 +4,54 @@
  "n_messages": 117,
  "n_parse_failures": 0,
  "severity": {
-  "accuracy": 0.6581196581196581,
-  "macro_precision": 0.6753472222222222,
-  "macro_recall": 0.6800653594771242,
-  "macro_f1": 0.6114158829676071,
+  "accuracy": 0.9829059829059829,
+  "macro_precision": 0.9811507936507936,
+  "macro_recall": 0.9881535947712419,
+  "macro_f1": 0.9844827470551933,
   "per_class": {
    "CRITICAL": {
-    "precision": 0.8125,
-    "recall": 0.7647058823529411,
-    "f1": 0.787878787878788,
+    "precision": 1.0,
+    "recall": 0.9803921568627451,
+    "f1": 0.99009900990099,
     "support": 51
    },
    "HIGH": {
-    "precision": 0.6666666666666666,
-    "recall": 0.5555555555555556,
-    "f1": 0.606060606060606,
+    "precision": 0.9722222222222222,
+    "recall": 0.9722222222222222,
+    "f1": 0.9722222222222222,
     "support": 36
    },
    "MODERATE": {
-    "precision": 0.8888888888888888,
-    "recall": 0.4,
-    "f1": 0.5517241379310346,
+    "precision": 0.9523809523809523,
+    "recall": 1.0,
+    "f1": 0.975609756097561,
     "support": 20
    },
    "LOW": {
-    "precision": 0.3333333333333333,
+    "precision": 1.0,
     "recall": 1.0,
-    "f1": 0.5,
+    "f1": 1.0,
     "support": 10
    }
   },
   "confusion": {
    "CRITICAL": {
-    "CRITICAL": 39,
-    "HIGH": 5,
+    "CRITICAL": 50,
+    "HIGH": 1,
     "MODERATE": 0,
-    "LOW": 7
+    "LOW": 0
    },
    "HIGH": {
-    "CRITICAL": 7,
-    "HIGH": 20,
+    "CRITICAL": 0,
+    "HIGH": 35,
     "MODERATE": 1,
-    "LOW": 8
+    "LOW": 0
    },
    "MODERATE": {
-    "CRITICAL": 2,
-    "HIGH": 5,
-    "MODERATE": 8,
-    "LOW": 5
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MODERATE": 20,
+    "LOW": 0
    },
    "LOW": {
     "CRITICAL": 0,
@@ -60,16 +60,16 @@
     "LOW": 10
    }
   },
-  "under_triage": 26,
-  "over_triage": 14,
-  "critical_recall": 0.7647058823529411,
-  "critical_missed": 12,
+  "under_triage": 2,
+  "over_triage": 0,
+  "critical_recall": 0.9803921568627451,
+  "critical_missed": 1,
   "n_critical": 51
  },
  "casualties": {
-  "exact_match": 0.7777777777777778,
-  "within_1": 0.8803418803418803,
-  "mae": 0.8717948717948718
+  "exact_match": 0.8034188034188035,
+  "within_1": 0.9145299145299145,
+  "mae": 0.7863247863247863
  },
  "resources": {
   "precision": 0.8666666666666667,
@@ -105,26 +105,26 @@
   },
   "reported_uncertainty_m_when_correct": {
    "n": 87,
-   "mean": 754.0229885057471,
+   "mean": 809.1954022988506,
    "median": 800.0,
-   "p95": 900.0,
-   "max": 900.0
+   "p95": 1100.0,
+   "max": 1200.0
   },
   "other_places_resolved": 0,
   "other_places_total": 12
  },
  "latency_ms": {
   "n": 117,
-  "mean": 0.15124273446635303,
-  "median": 0.1221999991685152,
-  "p95": 0.20420004148036244,
-  "max": 2.877499908208847
+  "mean": 0.45642136938424194,
+  "median": 0.304899993352592,
+  "p95": 0.8600399829447273,
+  "max": 6.454400019720197
  },
  "rows": [
   {
    "id": 1,
    "text": "Building collapsed near Paltan Bazaar, 6 people trapped under debris. Need first aid kits urgently.",
-   "latency_ms": 2.877499908208847,
+   "latency_ms": 6.454400019720197,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 6,
@@ -148,7 +148,7 @@
   {
    "id": 2,
    "text": "Flash flood at Zoo Road Tiniali. 12 residents stranded on rooftops, water rising. Send rafts and drinking water!",
-   "latency_ms": 0.26350002735853195,
+   "latency_ms": 3.3368999138474464,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 12,
@@ -174,7 +174,7 @@
   {
    "id": 3,
    "text": "5 people buried under the landslide at Jalukbari, need first aid kits.",
-   "latency_ms": 0.12039998546242714,
+   "latency_ms": 0.20760006736963987,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 5,
@@ -198,7 +198,7 @@
   {
    "id": 4,
    "text": "Water has entered the ground floor in Rajgarh, an elderly couple is trapped upstairs and cannot move. Please send a boat.",
-   "latency_ms": 0.48420007806271315,
+   "latency_ms": 0.7993000326678157,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 2,
@@ -223,7 +223,7 @@
   {
    "id": 5,
    "text": "Boat capsized near Ganeshguri, 8 people in the water, urgent!",
-   "latency_ms": 0.11549994815140963,
+   "latency_ms": 0.21249998826533556,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 8,
@@ -247,7 +247,7 @@
   {
    "id": 6,
    "text": "SOS! Khanapara overbridge area completely under water, 20 passengers stuck inside a bus, water level rising.",
-   "latency_ms": 0.1287000486627221,
+   "latency_ms": 5.136299994774163,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 20,
@@ -269,7 +269,7 @@
   {
    "id": 7,
    "text": "Wall collapse at Chandmari market, 4 workers trapped, one is bleeding badly. Ambulance and first aid kits please.",
-   "latency_ms": 0.17640006262809038,
+   "latency_ms": 0.32549991738051176,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 4,
@@ -285,7 +285,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 700.0,
+    "uncertainty_m": 1000.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -293,7 +293,7 @@
   {
    "id": 8,
    "text": "Six Mile flyover side: a house caved in, 3 children trapped inside. Help immediately.",
-   "latency_ms": 0.16569998115301132,
+   "latency_ms": 0.2778000198304653,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 3,
@@ -307,7 +307,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 800.0,
+    "uncertainty_m": 1100.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -315,7 +315,7 @@
   {
    "id": 9,
    "text": "Maligaon railway colony flooded, water above waist level, 10 families stranded. Need boats and food.",
-   "latency_ms": 0.11640007141977549,
+   "latency_ms": 0.39569998625665903,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 10,
@@ -341,7 +341,7 @@
   {
    "id": 10,
    "text": "Dispur: flash flood swept away a car with 3 people, we are trying to pull them out. Need rope and ambulance now.",
-   "latency_ms": 0.1365999924018979,
+   "latency_ms": 0.19799999427050352,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 3,
@@ -365,7 +365,7 @@
   {
    "id": 11,
    "text": "Beltola Tiniali under 5 feet of water. 15 people are on the first floor of a shop and cannot get out. Boats needed.",
-   "latency_ms": 0.1829999964684248,
+   "latency_ms": 0.35770004615187645,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 15,
@@ -381,7 +381,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 800.0,
+    "uncertainty_m": 1100.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -389,7 +389,7 @@
   {
    "id": 12,
    "text": "Landslide near Zoo Road, a bus is partially buried, passengers shouting for help.",
-   "latency_ms": 0.1167000737041235,
+   "latency_ms": 0.18049997743219137,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 0,
@@ -411,7 +411,7 @@
   {
    "id": 13,
    "text": "Trapped in a lift in Paltan Bazaar after power surge and flooding, 5 of us, oxygen is low.",
-   "latency_ms": 0.14270003885030746,
+   "latency_ms": 0.20790006965398788,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 5,
@@ -433,7 +433,7 @@
   {
    "id": 14,
    "text": "Rajgarh Road: three people have collapsed from electric shock in the water, please send an ambulance.",
-   "latency_ms": 0.16719999257475138,
+   "latency_ms": 0.41720003355294466,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 3,
@@ -450,7 +450,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 900.0,
+    "uncertainty_m": 1200.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -458,7 +458,7 @@
   {
    "id": 15,
    "text": "House collapsed at Ganeshguri Chariali. Two people under the rubble.",
-   "latency_ms": 0.17200002912431955,
+   "latency_ms": 0.35859993658959866,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 2,
@@ -472,7 +472,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 600.0,
+    "uncertainty_m": 900.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -480,7 +480,7 @@
   {
    "id": 16,
    "text": "My mother is having a heart attack and the road to the hospital at Chandmari is submerged. Need rescue boat.",
-   "latency_ms": 0.12850004713982344,
+   "latency_ms": 0.24280010256916285,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 1,
@@ -505,7 +505,7 @@
   {
    "id": 17,
    "text": "Khanapara ISBT: flood water is chest deep, many passengers stranded on the roof of the terminal. About 40 people.",
-   "latency_ms": 0.12370001059025526,
+   "latency_ms": 0.2759000053629279,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 40,
@@ -530,7 +530,7 @@
   {
    "id": 18,
    "text": "URGENT: embankment breach near Beltola, water entering homes fast, 25 people trapped.",
-   "latency_ms": 0.13669999316334724,
+   "latency_ms": 0.17909996677190065,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 25,
@@ -552,7 +552,7 @@
   {
    "id": 19,
    "text": "Six Mile area landslide has crushed two shops. Four people missing.",
-   "latency_ms": 0.1268000341951847,
+   "latency_ms": 0.1534000039100647,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 4,
@@ -574,7 +574,7 @@
   {
    "id": 20,
    "text": "SOS Jalukbari ghat: ferry stuck mid river, 30 passengers panicking, water rising.",
-   "latency_ms": 0.10830000974237919,
+   "latency_ms": 0.314100063405931,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 30,
@@ -596,7 +596,7 @@
   {
    "id": 21,
    "text": "Flooded basement at Dispur secretariat road, two guards trapped and water rising fast.",
-   "latency_ms": 0.11430005542933941,
+   "latency_ms": 0.19719998817890882,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 2,
@@ -620,7 +620,7 @@
   {
    "id": 22,
    "text": "Flash flood trapped 7 hikers near Zoo Road forest area, we have no signal. Send rescue.",
-   "latency_ms": 0.11899997480213642,
+   "latency_ms": 0.2004000125452876,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 7,
@@ -645,7 +645,7 @@
   {
    "id": 23,
    "text": "Building on fire and flooding combined at Paltan Bazaar market, people jumping out, 9 injured.",
-   "latency_ms": 0.17739995382726192,
+   "latency_ms": 0.3288999432697892,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 9,
@@ -661,7 +661,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 600.0,
+    "uncertainty_m": 900.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -669,11 +669,11 @@
   {
    "id": 24,
    "text": "Chandmari: roof of an old house collapsed, 2 trapped, calling from under the debris.",
-   "latency_ms": 0.11250004172325134,
+   "latency_ms": 0.18970004748553038,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 2,
-   "pred_casualties": 0,
+   "pred_casualties": 2,
    "gold_resources": [
     "First Aid Kits"
    ],
@@ -691,11 +691,11 @@
   {
    "id": 25,
    "text": "Stuck in car near Maligaon, water entering the car, 4 inside. HELP",
-   "latency_ms": 0.1167000737041235,
+   "latency_ms": 0.2202000468969345,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 4,
-   "pred_casualties": 0,
+   "pred_casualties": 4,
    "gold_resources": [
     "Inflatable Rafts"
    ],
@@ -713,11 +713,11 @@
   {
    "id": 26,
    "text": "Rajgarh: gas leak and flooded street, 3 unconscious people on the floor.",
-   "latency_ms": 0.11589995119720697,
+   "latency_ms": 0.18700002692639828,
    "gold_severity": "CRITICAL",
-   "pred_severity": "HIGH",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 3,
-   "pred_casualties": 0,
+   "pred_casualties": 3,
    "gold_resources": [
     "First Aid Kits"
    ],
@@ -735,7 +735,7 @@
   {
    "id": 27,
    "text": "Landslide hit the hostel wall at Khanapara, 6 students under the mud, rescue needed now.",
-   "latency_ms": 0.11679995805025101,
+   "latency_ms": 0.1759999431669712,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 6,
@@ -757,7 +757,7 @@
   {
    "id": 28,
    "text": "Dispur: collapsed scaffolding, a worker is trapped and bleeding heavily.",
-   "latency_ms": 0.11140003334730864,
+   "latency_ms": 0.18030009232461452,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 1,
@@ -781,7 +781,7 @@
   {
    "id": 29,
    "text": "Heavy flooding in Beltola, water inside houses but everyone is safe on upper floors. Need drinking water and food packets.",
-   "latency_ms": 0.12720003724098206,
+   "latency_ms": 0.40879996959120035,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -807,7 +807,7 @@
   {
    "id": 30,
    "text": "Two people injured after a tree fell on a scooter near Dispur. They are conscious. Need first aid.",
-   "latency_ms": 0.12390001211315393,
+   "latency_ms": 0.27600000612437725,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 2,
@@ -831,11 +831,11 @@
   {
    "id": 31,
    "text": "Fire in a godown near Paltan Bazaar, firefighters have not arrived, no one inside as far as we know.",
-   "latency_ms": 0.12470001820474863,
+   "latency_ms": 0.36310008727014065,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
-   "pred_casualties": 0,
+   "pred_casualties": 1,
    "gold_resources": [],
    "pred_resources": [],
    "gold_place": "paltan bazaar",
@@ -851,7 +851,7 @@
   {
    "id": 32,
    "text": "Flood water entered our house in Rajgarh, we moved upstairs with the kids, we need food and drinking water for 2 days.",
-   "latency_ms": 0.12860004790127277,
+   "latency_ms": 0.4192999331280589,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -877,9 +877,9 @@
   {
    "id": 33,
    "text": "A boy has a deep cut on his leg after falling in Khanapara market, bleeding but stable. Need first aid.",
-   "latency_ms": 0.18279999494552612,
+   "latency_ms": 0.3736999351531267,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -893,7 +893,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 700.0,
+    "uncertainty_m": 1000.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -901,9 +901,9 @@
   {
    "id": 34,
    "text": "Three people with minor injuries from a wall collapse at Chandmari, others are safe. Please send first aid kits.",
-   "latency_ms": 0.1330999657511711,
+   "latency_ms": 0.305499997921288,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 3,
    "pred_casualties": 3,
    "gold_resources": [
@@ -925,7 +925,7 @@
   {
    "id": 35,
    "text": "Flooded colony at Maligaon, 50 houses affected, no food since yesterday.",
-   "latency_ms": 0.2804999239742756,
+   "latency_ms": 0.304899993352592,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -949,7 +949,7 @@
   {
    "id": 36,
    "text": "Water supply contaminated by floodwater at Jalukbari, people falling sick, need drinking water.",
-   "latency_ms": 0.2031000331044197,
+   "latency_ms": 0.36079995334148407,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -973,9 +973,9 @@
   {
    "id": 37,
    "text": "Five injured in a bus collision on the flooded road at Dispur, all awake and talking.",
-   "latency_ms": 0.13749999925494194,
+   "latency_ms": 0.2824000548571348,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 5,
    "pred_casualties": 5,
    "gold_resources": [
@@ -997,9 +997,9 @@
   {
    "id": 38,
    "text": "Elderly man with diabetes needs insulin, cannot leave the house because of flood near Zoo Road. Need medical help.",
-   "latency_ms": 0.14919997192919254,
+   "latency_ms": 0.30720001086592674,
    "gold_severity": "CRITICAL",
-   "pred_severity": "HIGH",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -1021,9 +1021,9 @@
   {
    "id": 39,
    "text": "River bank erosion is damaging houses near Jalukbari, families moved to the school, need food.",
-   "latency_ms": 0.13910001143813133,
+   "latency_ms": 0.3087000222876668,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [
@@ -1045,7 +1045,7 @@
   {
    "id": 40,
    "text": "Heavy rain flooding Khanapara petrol pump, fuel leaking into the water.",
-   "latency_ms": 0.20860007498413324,
+   "latency_ms": 0.38810004480183125,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -1057,7 +1057,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 700.0,
+    "uncertainty_m": 1000.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1065,9 +1065,9 @@
   {
    "id": 41,
    "text": "Boundary wall collapsed at Rajgarh school, 2 students have fractures, teachers are with them.",
-   "latency_ms": 0.18770003225654364,
+   "latency_ms": 0.3195999888703227,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 2,
    "pred_casualties": 2,
    "gold_resources": [
@@ -1079,7 +1079,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 900.0,
+    "uncertainty_m": 1200.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1087,9 +1087,9 @@
   {
    "id": 42,
    "text": "Floodwater has cut off our lane at Six Mile, 30 families have no food or clean water.",
-   "latency_ms": 0.11959997937083244,
+   "latency_ms": 0.3212000010535121,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 30,
    "gold_resources": [
@@ -1112,9 +1112,9 @@
   {
    "id": 43,
    "text": "Pregnant woman in labour at Ganeshguri, ambulance stuck in the flood, we need help reaching hospital.",
-   "latency_ms": 0.12280000373721123,
+   "latency_ms": 0.22760010324418545,
    "gold_severity": "CRITICAL",
-   "pred_severity": "HIGH",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -1136,9 +1136,9 @@
   {
    "id": 44,
    "text": "Electric transformer exploded near Paltan Bazaar, area dark, two people got burns.",
-   "latency_ms": 0.14260003808885813,
+   "latency_ms": 0.26569992769509554,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 2,
    "pred_casualties": 2,
    "gold_resources": [
@@ -1158,7 +1158,7 @@
   {
    "id": 45,
    "text": "Our hostel at Khanapara has no power and the lower floor is flooded, we are safe but need drinking water.",
-   "latency_ms": 0.1322000753134489,
+   "latency_ms": 0.3887999337166548,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -1182,7 +1182,7 @@
   {
    "id": 46,
    "text": "Flash flood washed away the culvert at Maligaon, road cut off completely.",
-   "latency_ms": 0.11329993139952421,
+   "latency_ms": 0.5632000975310802,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -1202,7 +1202,7 @@
   {
    "id": 47,
    "text": "Dog bite victim bleeding at Chandmari, no vehicle available because of flooding.",
-   "latency_ms": 0.12450001668184996,
+   "latency_ms": 0.43429993093013763,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 1,
@@ -1226,9 +1226,9 @@
   {
    "id": 48,
    "text": "Landslide near Zoo Road narrowly missed a house, cracks in the walls, family is staying outside.",
-   "latency_ms": 0.12999994214624166,
+   "latency_ms": 0.3611999563872814,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1246,9 +1246,9 @@
   {
    "id": 49,
    "text": "Flooded street in Dispur, two children have fever and cough, need medicine.",
-   "latency_ms": 0.12630003038793802,
+   "latency_ms": 0.582000007852912,
    "gold_severity": "MODERATE",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 2,
    "pred_casualties": 2,
    "gold_resources": [
@@ -1270,7 +1270,7 @@
   {
    "id": 50,
    "text": "Smoke from a short circuit in a flooded shop at Ganeshguri, one person coughing badly.",
-   "latency_ms": 0.13260007835924625,
+   "latency_ms": 0.7708999328315258,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 1,
@@ -1292,7 +1292,7 @@
   {
    "id": 51,
    "text": "Heavy flooding on Jalukbari bypass, trucks stuck, drivers have no food or water for 12 hours.",
-   "latency_ms": 0.12829992920160294,
+   "latency_ms": 0.6972999544814229,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -1317,9 +1317,9 @@
   {
    "id": 52,
    "text": "Wall of the drain collapsed near Rajgarh Road, water entering shops, no one hurt.",
-   "latency_ms": 0.17090002074837685,
+   "latency_ms": 0.9661000221967697,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1331,7 +1331,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 900.0,
+    "uncertainty_m": 1200.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1339,9 +1339,9 @@
   {
    "id": 53,
    "text": "Need first aid kits at the relief camp in Khanapara, one person has a broken arm.",
-   "latency_ms": 0.12099999003112316,
+   "latency_ms": 0.510399928316474,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 1,
    "pred_casualties": 1,
    "gold_resources": [
@@ -1363,7 +1363,7 @@
   {
    "id": 54,
    "text": "Floodwater entering the ground floor of the hospital at Six Mile, patients being shifted.",
-   "latency_ms": 0.12420001439750195,
+   "latency_ms": 0.6243999814614654,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -1383,7 +1383,7 @@
   {
    "id": 55,
    "text": "Child cut by broken glass while wading through flood at Paltan Bazaar.",
-   "latency_ms": 0.12089998926967382,
+   "latency_ms": 0.5781999789178371,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 1,
@@ -1405,9 +1405,9 @@
   {
    "id": 56,
    "text": "Waterlogging at Ganeshguri since morning, shops flooded, traffic completely jammed.",
-   "latency_ms": 0.12400001287460327,
+   "latency_ms": 0.5284000653773546,
    "gold_severity": "HIGH",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1425,7 +1425,7 @@
   {
    "id": 57,
    "text": "Knee-deep water on the road at Beltola, two-wheelers are struggling.",
-   "latency_ms": 0.1270999200642109,
+   "latency_ms": 0.623999978415668,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1445,9 +1445,9 @@
   {
    "id": 58,
    "text": "Electricity pole fell across the road at Chandmari, wires are live, people avoiding the area.",
-   "latency_ms": 0.12319989036768675,
+   "latency_ms": 0.5487999878823757,
    "gold_severity": "HIGH",
-   "pred_severity": "MODERATE",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1465,7 +1465,7 @@
   {
    "id": 59,
    "text": "No electricity in Dispur since last night, transformer damaged.",
-   "latency_ms": 0.1094999024644494,
+   "latency_ms": 0.5386000266298652,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1485,9 +1485,9 @@
   {
    "id": 60,
    "text": "Landslide debris blocking the Six Mile road, vehicles cannot pass, no injuries reported.",
-   "latency_ms": 0.17110002227127552,
+   "latency_ms": 0.7236999226734042,
    "gold_severity": "MODERATE",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1499,7 +1499,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 800.0,
+    "uncertainty_m": 1100.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1507,7 +1507,7 @@
   {
    "id": 61,
    "text": "A big tree fell on the road near Rajgarh and blocked traffic.",
-   "latency_ms": 0.11639995500445366,
+   "latency_ms": 0.49750006292015314,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1527,9 +1527,9 @@
   {
    "id": 62,
    "text": "Drain overflow near Paltan Bazaar, dirty water on the road.",
-   "latency_ms": 0.11549994815140963,
+   "latency_ms": 0.4914000164717436,
    "gold_severity": "MODERATE",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1547,9 +1547,9 @@
   {
    "id": 63,
    "text": "Streetlights are not working on Zoo Road after the storm.",
-   "latency_ms": 0.1221999991685152,
+   "latency_ms": 0.4893000004813075,
    "gold_severity": "MODERATE",
-   "pred_severity": "LOW",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1567,7 +1567,7 @@
   {
    "id": 64,
    "text": "Road caved in a little at Jalukbari, one lane is blocked, please inspect.",
-   "latency_ms": 0.11959997937083244,
+   "latency_ms": 0.5249000387266278,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1587,9 +1587,9 @@
   {
    "id": 65,
    "text": "Mobile network is down in Khanapara after the floods, people cannot call for help.",
-   "latency_ms": 0.1159000676125288,
+   "latency_ms": 0.5584999453276396,
    "gold_severity": "MODERATE",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1607,9 +1607,9 @@
   {
    "id": 66,
    "text": "Water supply has stopped in Maligaon for two days.",
-   "latency_ms": 0.11100003030151129,
+   "latency_ms": 0.4683999577537179,
    "gold_severity": "MODERATE",
-   "pred_severity": "LOW",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1627,7 +1627,7 @@
   {
    "id": 67,
    "text": "Power cut and knee-deep water around Zoo Road Tiniali, shops closed.",
-   "latency_ms": 0.12370001059025526,
+   "latency_ms": 0.5518998950719833,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1647,7 +1647,7 @@
   {
    "id": 68,
    "text": "Traffic signal not working at Ganeshguri Chariali and the junction has knee-deep water.",
-   "latency_ms": 0.17490005120635033,
+   "latency_ms": 0.5100000416859984,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1659,7 +1659,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 600.0,
+    "uncertainty_m": 900.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1667,7 +1667,7 @@
   {
    "id": 69,
    "text": "Fallen tree branches blocking the lane at Beltola.",
-   "latency_ms": 0.11190003715455532,
+   "latency_ms": 0.2655999269336462,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1687,7 +1687,7 @@
   {
    "id": 70,
    "text": "Electricity wires hanging low near Chandmari, nobody hurt yet, please fix.",
-   "latency_ms": 0.1221999991685152,
+   "latency_ms": 0.30940002761781216,
    "gold_severity": "MODERATE",
    "pred_severity": "MODERATE",
    "gold_casualties": 0,
@@ -1709,9 +1709,9 @@
   {
    "id": 71,
    "text": "Waterlogging near Six Mile bus stop, buses running late.",
-   "latency_ms": 0.17570005729794502,
+   "latency_ms": 0.31670008320361376,
    "gold_severity": "MODERATE",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1721,7 +1721,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 800.0,
+    "uncertainty_m": 1100.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1729,7 +1729,7 @@
   {
    "id": 72,
    "text": "Light drizzle and small puddles near Dispur, just letting you know.",
-   "latency_ms": 0.11799996718764305,
+   "latency_ms": 0.28819998260587454,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1749,7 +1749,7 @@
   {
    "id": 73,
    "text": "Is the Khanapara road open for travel tomorrow?",
-   "latency_ms": 0.16299996059387922,
+   "latency_ms": 0.3245000261813402,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1761,7 +1761,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 700.0,
+    "uncertainty_m": 1000.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1769,7 +1769,7 @@
   {
    "id": 74,
    "text": "Please tell me the nearest relief camp near Zoo Road.",
-   "latency_ms": 0.11310004629194736,
+   "latency_ms": 0.2797000342980027,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1789,7 +1789,7 @@
   {
    "id": 75,
    "text": "Stray dogs gathering near the Beltola relief point, no one hurt.",
-   "latency_ms": 0.11739996261894703,
+   "latency_ms": 0.30529999639838934,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1811,7 +1811,7 @@
   {
    "id": 76,
    "text": "Pothole filled with water at Rajgarh, will be a problem later.",
-   "latency_ms": 0.11449994053691626,
+   "latency_ms": 0.2853999612852931,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1831,7 +1831,7 @@
   {
    "id": 77,
    "text": "Minor leak in a water pipe near Chandmari.",
-   "latency_ms": 0.1137999352067709,
+   "latency_ms": 0.24580000899732113,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1851,7 +1851,7 @@
   {
    "id": 78,
    "text": "Crowd watching the river at Jalukbari bridge, police not present, nothing wrong right now.",
-   "latency_ms": 0.18089998047798872,
+   "latency_ms": 1.0884000221267343,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1863,7 +1863,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 900.0,
+    "uncertainty_m": 1200.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1871,7 +1871,7 @@
   {
    "id": 79,
    "text": "Ankle deep water at Ganeshguri Chariali, shops opening late.",
-   "latency_ms": 0.16609998419880867,
+   "latency_ms": 0.8372999727725983,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1883,7 +1883,7 @@
    "location": {
     "resolved": true,
     "source": "geocoded",
-    "uncertainty_m": 600.0,
+    "uncertainty_m": 900.0,
     "error_m": 0.0,
     "outcome": "correct"
    }
@@ -1891,7 +1891,7 @@
   {
    "id": 80,
    "text": "Test message, please ignore.",
-   "latency_ms": 0.3773999633267522,
+   "latency_ms": 0.9510000236332417,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1911,7 +1911,7 @@
   {
    "id": 81,
    "text": "Can volunteers register at Paltan Bazaar tomorrow morning?",
-   "latency_ms": 0.13239996042102575,
+   "latency_ms": 0.344799947924912,
    "gold_severity": "LOW",
    "pred_severity": "LOW",
    "gold_casualties": 0,
@@ -1931,7 +1931,7 @@
   {
    "id": 82,
    "text": "Flooding near Fancy Bazar, 3 people trapped in a shop.",
-   "latency_ms": 0.18339999951422215,
+   "latency_ms": 0.35200000274926424,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 3,
@@ -1955,9 +1955,9 @@
   {
    "id": 83,
    "text": "Landslide at Narengi, 2 houses damaged, no one hurt.",
-   "latency_ms": 0.11600006837397814,
+   "latency_ms": 0.3139000618830323,
    "gold_severity": "HIGH",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1977,9 +1977,9 @@
   {
    "id": 84,
    "text": "Water logging at Bhangagarh since morning.",
-   "latency_ms": 0.1151000615209341,
+   "latency_ms": 0.3182999789714813,
    "gold_severity": "MODERATE",
-   "pred_severity": "LOW",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -1997,7 +1997,7 @@
   {
    "id": 85,
    "text": "Tree fell on a car near Lokhra Chariali, driver injured.",
-   "latency_ms": 0.16109994612634182,
+   "latency_ms": 0.39029994513839483,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 1,
@@ -2021,9 +2021,9 @@
   {
    "id": 86,
    "text": "Hatigaon main road flooded, two-wheelers cannot pass.",
-   "latency_ms": 0.05579995922744274,
+   "latency_ms": 0.19779999274760485,
    "gold_severity": "MODERATE",
-   "pred_severity": "HIGH",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -2041,9 +2041,9 @@
   {
    "id": 87,
    "text": "Uzanbazar ghat: man swept away by the river, search needed.",
-   "latency_ms": 0.056299963034689426,
+   "latency_ms": 0.11049991007894278,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2063,9 +2063,9 @@
   {
    "id": 88,
    "text": "Fire at a warehouse in Garchuk, people inside, send help.",
-   "latency_ms": 0.11650007218122482,
+   "latency_ms": 0.24239998310804367,
    "gold_severity": "CRITICAL",
-   "pred_severity": "HIGH",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2085,9 +2085,9 @@
   {
    "id": 89,
    "text": "Noonmati refinery road waterlogged.",
-   "latency_ms": 0.04950002767145634,
+   "latency_ms": 0.1433000434190035,
    "gold_severity": "MODERATE",
-   "pred_severity": "LOW",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -2105,7 +2105,7 @@
   {
    "id": 90,
    "text": "Adabari bus stand flooded, passengers stranded.",
-   "latency_ms": 0.05449994932860136,
+   "latency_ms": 0.18720002844929695,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 0,
@@ -2129,9 +2129,9 @@
   {
    "id": 91,
    "text": "Ulubari underpass is full of water, a car is stuck.",
-   "latency_ms": 0.05430006422102451,
+   "latency_ms": 0.18319999799132347,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -2149,7 +2149,7 @@
   {
    "id": 92,
    "text": "Silpukhuri: drain overflow flooding houses.",
-   "latency_ms": 0.048999907448887825,
+   "latency_ms": 0.14619994908571243,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -2169,9 +2169,9 @@
   {
    "id": 93,
    "text": "Basistha hill road landslide, vehicles stuck.",
-   "latency_ms": 0.05010003224015236,
+   "latency_ms": 0.17570005729794502,
    "gold_severity": "MODERATE",
-   "pred_severity": "CRITICAL",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -2189,7 +2189,7 @@
   {
    "id": 94,
    "text": "SOS! Landslide at 26.1450 N, 91.8020 E. 6 people trapped. Need first aid kits.",
-   "latency_ms": 0.07529999129474163,
+   "latency_ms": 0.12630003038793802,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 6,
@@ -2213,7 +2213,7 @@
   {
    "id": 95,
    "text": "Flood at 26.1280 N, 91.8000 E. Water inside houses. We need food packets.",
-   "latency_ms": 0.07770000956952572,
+   "latency_ms": 0.2777999034151435,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -2237,7 +2237,7 @@
   {
    "id": 96,
    "text": "Location 26.1595, 91.7712 water rising, 3 people on the roof.",
-   "latency_ms": 0.056999968364834785,
+   "latency_ms": 0.14939997345209122,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 3,
@@ -2259,7 +2259,7 @@
   {
    "id": 97,
    "text": "At 26.1830, 91.7500 a boy fell into the open drain and is being swept away, please send help immediately.",
-   "latency_ms": 0.07059995550662279,
+   "latency_ms": 0.15169999096542597,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 1,
@@ -2279,11 +2279,11 @@
   {
    "id": 98,
    "text": "Car stuck in water at 26.1832 91.7390, two adults inside, safe for now.",
-   "latency_ms": 0.07379997987300158,
+   "latency_ms": 0.2095999661833048,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 2,
-   "pred_casualties": 0,
+   "pred_casualties": 2,
    "gold_resources": [
     "Inflatable Rafts"
    ],
@@ -2301,7 +2301,7 @@
   {
    "id": 99,
    "text": "Lat 26.1730 Lon 91.7730 flooded road, shops damaged.",
-   "latency_ms": 0.07050007116049528,
+   "latency_ms": 0.21389999892562628,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -2321,9 +2321,9 @@
   {
    "id": 100,
    "text": "Help! Water is entering our house and the children are scared.",
-   "latency_ms": 0.062700011767447,
+   "latency_ms": 0.18859992269426584,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
@@ -2341,9 +2341,9 @@
   {
    "id": 101,
    "text": "Someone please send a boat, we are on the roof.",
-   "latency_ms": 0.059999991208314896,
+   "latency_ms": 0.14490005560219288,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2365,9 +2365,9 @@
   {
    "id": 102,
    "text": "I need first aid kits urgently, my brother is hurt.",
-   "latency_ms": 0.057399971410632133,
+   "latency_ms": 0.16590009909123182,
    "gold_severity": "HIGH",
-   "pred_severity": "LOW",
+   "pred_severity": "HIGH",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2389,7 +2389,7 @@
   {
    "id": 103,
    "text": "Flood flood flood please help",
-   "latency_ms": 0.04650000482797623,
+   "latency_ms": 0.15189999248832464,
    "gold_severity": "CRITICAL",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -2409,9 +2409,9 @@
   {
    "id": 104,
    "text": "Medical emergency, patient not breathing.",
-   "latency_ms": 0.05119992420077324,
+   "latency_ms": 0.10379997547715902,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 1,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2433,7 +2433,7 @@
   {
    "id": 105,
    "text": "Road blocked by a landslide, no signal, 6 of us are stuck in the car.",
-   "latency_ms": 0.05779997445642948,
+   "latency_ms": 0.19370007794350386,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 6,
@@ -2453,7 +2453,7 @@
   {
    "id": 106,
    "text": "SOS flooding near Connaught Place, Delhi. 5 people trapped.",
-   "latency_ms": 0.11100003030151129,
+   "latency_ms": 0.22590009029954672,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 5,
@@ -2477,7 +2477,7 @@
   {
    "id": 107,
    "text": "Landslide on Police Bazar road, Shillong, 4 people trapped.",
-   "latency_ms": 0.058699981309473515,
+   "latency_ms": 0.0879000872373581,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 4,
@@ -2499,7 +2499,7 @@
   {
    "id": 108,
    "text": "Flood at Silchar town, 20 people stranded on a roof.",
-   "latency_ms": 0.1230000052601099,
+   "latency_ms": 0.2555000828579068,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 20,
@@ -2523,7 +2523,7 @@
   {
    "id": 109,
    "text": "Coordinates 28.6139 N, 77.2090 E, flood, 4 people trapped.",
-   "latency_ms": 0.05700008478015661,
+   "latency_ms": 0.11749996338039637,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 4,
@@ -2547,9 +2547,9 @@
   {
    "id": 110,
    "text": "pls help khanapra me pani aa gaya 10 log fase hai",
-   "latency_ms": 0.05609996151179075,
+   "latency_ms": 0.11449994053691626,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 10,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2569,7 +2569,7 @@
   {
    "id": 111,
    "text": "SOS SOS ZOO ROAD TINIALI FLOOD 5 PEOPLE ON ROOF!!!",
-   "latency_ms": 0.11329993139952421,
+   "latency_ms": 0.20940008107572794,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 5,
@@ -2591,9 +2591,9 @@
   {
    "id": 112,
    "text": "flud at beltola 3 ppl strnded plz send boat",
-   "latency_ms": 0.112400040961802,
+   "latency_ms": 0.22390007507055998,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 3,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2615,7 +2615,7 @@
   {
    "id": 113,
    "text": "Chandmari water rising fast!! trapped in shop",
-   "latency_ms": 0.10549998842179775,
+   "latency_ms": 0.16499997582286596,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 0,
@@ -2637,9 +2637,9 @@
   {
    "id": 114,
    "text": "Need rafts n food at Maligaon, 12 stuck, house surrounded by water",
-   "latency_ms": 0.12290000449866056,
+   "latency_ms": 0.24550000671297312,
    "gold_severity": "CRITICAL",
-   "pred_severity": "LOW",
+   "pred_severity": "CRITICAL",
    "gold_casualties": 12,
    "pred_casualties": 0,
    "gold_resources": [
@@ -2663,7 +2663,7 @@
   {
    "id": 115,
    "text": "ganeshguri flood help",
-   "latency_ms": 0.12869993224740028,
+   "latency_ms": 0.2101000864058733,
    "gold_severity": "HIGH",
    "pred_severity": "HIGH",
    "gold_casualties": 0,
@@ -2683,7 +2683,7 @@
   {
    "id": 116,
    "text": "Urgent!!! JALUKBARI landslide!!! 2 ppl hurt",
-   "latency_ms": 0.13109995052218437,
+   "latency_ms": 0.16229995526373386,
    "gold_severity": "CRITICAL",
    "pred_severity": "CRITICAL",
    "gold_casualties": 2,
@@ -2707,9 +2707,9 @@
   {
    "id": 117,
    "text": "dispur me bijli nahi hai kal se",
-   "latency_ms": 0.18339999951422215,
+   "latency_ms": 0.22769998759031296,
    "gold_severity": "MODERATE",
-   "pred_severity": "LOW",
+   "pred_severity": "MODERATE",
    "gold_casualties": 0,
    "pred_casualties": 0,
    "gold_resources": [],
