@@ -220,14 +220,14 @@ def test_longitude_outside_bbox_is_rejected_too():
 
 def test_osm_hit_far_from_the_named_locality_is_rejected(monkeypatch):
     # A same-name place 10 km away must not beat the gazetteer.
-    monkeypatch.setattr(triage_mod, "_nominatim", lambda phrase, s: (26.20, 91.66, 150.0))
+    monkeypatch.setattr(triage_mod, "_nominatim", lambda phrase, s, deadline=None: (26.20, 91.66, 150.0))
     res = resolve_location(incident(latitude=None, longitude=None, location_text="Khanapara bus stand"),
                            settings=Settings(geocode_online=True))
     assert (res.latitude, res.longitude) == pytest.approx((26.125, 91.8108), abs=0.001)
 
 
 def test_precise_osm_hit_near_the_locality_is_kept(monkeypatch):
-    monkeypatch.setattr(triage_mod, "_nominatim", lambda phrase, s: (26.1187, 91.8059, 150.0))
+    monkeypatch.setattr(triage_mod, "_nominatim", lambda phrase, s, deadline=None: (26.1187, 91.8059, 150.0))
     res = resolve_location(incident(latitude=None, longitude=None, location_text="Khanapara bus stand"),
                            settings=Settings(geocode_online=True))
     assert (res.latitude, res.longitude) == (26.1187, 91.8059)
