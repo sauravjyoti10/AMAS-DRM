@@ -1,6 +1,6 @@
 """Multi-Depot Resource Allocation MILP Solver."""
 import pulp
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Dict, Tuple
 
 # Transit penalty used by the live pipeline. Found by evaluation/eval_allocation.py: with the old 0.1, a LOW incident
@@ -15,6 +15,7 @@ class Depot(BaseModel):
     capacity: int
     lat: float
     lon: float
+    inventory: Dict[str, int] = Field(default_factory=dict)
 
 class IncidentDemand(BaseModel):
     id: str
@@ -76,4 +77,96 @@ def optimize_allocation(
             if allocated_qty > 0:
                 allocation_plan[inc.id][dep.id] = allocated_qty
                 
+    return allocation_plan
+
+
+def optimize_resource_allocation(
+    incidents: List[dict],
+    depots: List[Depot],
+    distances: Dict[Tuple[str, str], float],
+    lambda_penalty: float = 0.01,
+) -> Dict[str, Dict[str, Dict[str, int]]]:
+
+    prob = pulp.LpProblem("Resource_Allocation", pulp.LpMaximize)
+    x = {}
+
+    for inc in incidents:
+        for depot in depots:
+            for resource in inc.get("needed_resources", []):
+                name = resource["item_name"]
+                x[(inc["id"], depot.id, name)] = prob.add_variable(
+                    f"x_{inc['id']}_{depot.id}_{name}",
+                    lowBound=0,
+                    cat=pulp.LpInteger,
+                )
+
+    utility_terms = []
+    penalty_terms = []
+
+    for inc in incidents:
+        for depot in depots:
+            distance = distances.get((inc["id"], depot.id), 9999.0)
+
+            for resource in inc.get("needed_resources", []):
+                name = resource["item_name"]
+                var = x[(inc["id"], depot.id, name)]
+
+                utility_terms.append(inc["severity_score"] * var)
+                penalty_terms.append(lambda_penalty * distance * var)
+
+    prob += pulp.lpSum(utility_terms) - pulp.lpSum(penalty_terms)
+
+    # Depot inventory constraints.
+    
+# Depot inventory constraints: stock is shared across all incidents.
+    resource_names = {
+        resource["item_name"]
+        for inc in incidents
+        for resource in inc.get("needed_resources", [])
+    }
+
+    for depot in depots:
+        for name in resource_names:
+            depot_vars = [
+                x[(inc["id"], depot.id, name)]
+                for inc in incidents
+                if any(
+                    resource["item_name"] == name
+                    for resource in inc.get("needed_resources", [])
+                )
+            ]
+
+            prob += (
+                pulp.lpSum(depot_vars) <= depot.inventory.get(name, 0)
+            )
+
+
+    # Incident demand constraints.
+    for inc in incidents:
+        for resource in inc.get("needed_resources", []):
+            name = resource["item_name"]
+
+            prob += pulp.lpSum(
+                x[(inc["id"], depot.id, name)]
+                for depot in depots
+            ) <= resource["quantity"]
+
+    prob.solve()
+
+    allocation_plan = {inc["id"]: {} for inc in incidents}
+
+    for inc in incidents:
+        for depot in depots:
+            depot_allocation = {}
+
+            for resource in inc.get("needed_resources", []):
+                name = resource["item_name"]
+                quantity = int(x[(inc["id"], depot.id, name)].varValue or 0)
+
+                if quantity > 0:
+                    depot_allocation[name] = quantity
+
+            if depot_allocation:
+                allocation_plan[inc["id"]][depot.id] = depot_allocation
+
     return allocation_plan

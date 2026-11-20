@@ -6,7 +6,12 @@ from typing import Any, Dict, List, Optional, TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from app.allocation import PIPELINE_TRANSIT_PENALTY, IncidentDemand, optimize_allocation
+from app.allocation import (
+    PIPELINE_TRANSIT_PENALTY,
+    IncidentDemand,
+    optimize_allocation,
+    optimize_resource_allocation,
+)
 from app.config import get_settings
 from app.depots import DEPOTS
 from app.geo import haversine_m
@@ -105,33 +110,82 @@ def _depot_distances_km(net, lat: float, lon: float, avoid) -> Dict[str, float]:
     return out
 
 
+
 def allocation_node(state: AgentState) -> Dict[str, Any]:
     incident_data = state.get("incident")
     if not incident_data:
-        return {"status": "failed", "error": "No incident data found for allocation"}
+        return {
+            "status": "failed",
+            "error": "No incident data found for allocation"
+        }
 
-    lat, lon = incident_data.get("latitude"), incident_data.get("longitude")
+    lat = incident_data.get("latitude")
+    lon = incident_data.get("longitude")
+
     if lat is None or lon is None:
-        return {"status": "failed", "error": "Coordinates missing for allocation"}
+        return {
+            "status": "failed",
+            "error": "Coordinates missing for allocation"
+        }
+
+    needed_resources = incident_data.get("needed_resources", [])
+
+    if not needed_resources:
+        return {
+            "status": "failed",
+            "error": "No resource requirements found for allocation"
+        }
 
     net, warning = _load_network()
+
     warnings = list(state.get("warnings") or [])
+
     if warning and warning not in warnings:
-        warnings.append(warning + " (depot distances are straight-line estimates)")
-    avoid, _ = split_by_destination(get_hazard_store().list(), lat, lon)
+        warnings.append(
+            warning + " (depot distances are straight-line estimates)"
+        )
 
-    inc_demand = IncidentDemand(
-        id="INC_1",
-        severity_score=SEVERITY_WEIGHTS.get(incident_data.get("severity", "MODERATE"), 2.5),
-        demand=max(1, sum(item.get("quantity", 1) for item in incident_data.get("needed_resources", []))),
-        lat=lat,
-        lon=lon,
+    avoid, _ = split_by_destination(
+        get_hazard_store().list(), lat, lon
     )
-    km = _depot_distances_km(net, lat, lon, avoid)
-    plan = optimize_allocation([inc_demand], DEPOTS, {("INC_1", d.id): km[d.id] for d in DEPOTS},
-                               lambda_penalty=PIPELINE_TRANSIT_PENALTY)
 
-    return {"allocation": plan, "status": "allocated", "error": None, "warnings": warnings}
+    severity_score = SEVERITY_WEIGHTS.get(
+        incident_data.get("severity", "MODERATE"), 2.5
+    )
+
+    incident = {
+        "id": "INC_1",
+        "severity_score": severity_score,
+        "needed_resources": [
+            {
+                "item_name": item["item_name"],
+                "quantity": item["quantity"]
+            }
+            for item in needed_resources
+        ],
+    }
+
+    distances_km = _depot_distances_km(net, lat, lon, avoid)
+
+    distance_map = {
+        ("INC_1", depot.id): distances_km[depot.id]
+        for depot in DEPOTS
+    }
+
+    plan = optimize_resource_allocation(
+        incidents=[incident],
+        depots=DEPOTS,
+        distances=distance_map,
+        lambda_penalty=PIPELINE_TRANSIT_PENALTY,
+    )
+
+    return {
+        "allocation": plan,
+        "status": "allocated",
+        "error": None,
+        "warnings": warnings,
+    }
+
 
 
 def routing_node(state: AgentState) -> Dict[str, Any]:
@@ -151,8 +205,24 @@ def routing_node(state: AgentState) -> Dict[str, Any]:
     settings = get_settings()
     avoid, ignored = split_by_destination(get_hazard_store().list(), dest_lat, dest_lon)
     plan = allocation.get("INC_1", {})
-    # Depots that were allocated stock come first (largest share first), then nearest as the tie-break.
-    depots = sorted(DEPOTS, key=lambda d: (-plan.get(d.id, 0), haversine_m(d.lat, d.lon, dest_lat, dest_lon)))
+
+    # Calculate total allocated resources from each depot.
+    def allocated_total(depot):
+        depot_allocation = plan.get(depot.id, 0)
+
+        if isinstance(depot_allocation, dict):
+            return sum(depot_allocation.values())
+
+        return depot_allocation
+
+    # Depots with the highest allocation are considered first.
+    depots = sorted(
+        DEPOTS,
+        key=lambda d: (
+            -allocated_total(d),
+            haversine_m(d.lat, d.lon, dest_lat, dest_lon)
+        )
+    )
 
     last_error: Optional[Exception] = None
     for depot in depots:

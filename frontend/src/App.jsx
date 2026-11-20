@@ -326,6 +326,39 @@ export default function App() {
                   </div>
                 )}
 
+                
+                {item.allocation?.INC_1 && (
+                  <div className="resource-info">
+                    <strong>🏬 Depot-wise Resource Allocation</strong>
+
+                    {Object.entries(item.allocation.INC_1).map(
+                      ([depotId, resources]) => (
+                        <div key={depotId} style={{ marginTop: '0.5rem' }}>
+                          <strong>
+                            {depotId === 'Depot_ZooRoad'
+                              ? '🏢 Zoo Road Central Depot'
+                              : depotId === 'Depot_Dispur'
+                                ? '🏢 Dispur Emergency Depot'
+                                : depotId}
+                          </strong>
+
+                          <div className="chips">
+                            {Object.entries(resources).map(
+                              ([resourceName, quantity]) => (
+                                <span
+                                  className="chip"
+                                  key={`${depotId}-${resourceName}`}
+                                >
+                                  {resourceName}: {quantity}
+                                </span>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
 
                 {route && (
                   <div className="route-info">
