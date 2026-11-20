@@ -161,8 +161,23 @@ body, html, #root {
 .loc-line { font-size: 0.8rem; color: #cbd5e1; }
 .loc-sub { font-size: 0.7rem; color: #64748b; margin-bottom: 0.3rem; }
 .route-info { font-size: 0.8rem; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #1e293b; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
-.chip { font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 999px; }
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
 .chip.ok { background: #14532d; color: #bbf7d0; }
 .chip.warn { background: #713f12; color: #fde68a; }
 .chip.bad { background: #7f1d1d; color: #fecaca; }

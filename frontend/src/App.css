@@ -318,3 +318,22 @@ body, html, #root {
   cursor: pointer;
   font-size: 0.85rem;
 }
+
+.resource-info .chips {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center;
+  gap: 8px !important;
+  margin-top: 8px;
+}
+
+.resource-info .chip {
+  display: inline-flex !important;
+  width: fit-content;
+  white-space: nowrap;
+  margin: 0;
+  padding: 4px 9px;
+  line-height: 1.5;
+  border-radius: 999px;
+}

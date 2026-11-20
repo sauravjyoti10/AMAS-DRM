@@ -90,7 +90,14 @@ def test_manual_pin_then_dispatch_routes_the_incident(mock_from_graphml, no_haza
     net.route.return_value = fake_route(2500.0)
     mock_from_graphml.return_value = net
     state = {"raw_sos": "x", "status": "triaged", "needs_human_verification": True,
-             "incident": {"severity": "HIGH", "latitude": None, "longitude": None, "needed_resources": []}}
+             "incident": {
+                "severity": "HIGH",
+                "latitude": None,
+                "longitude": None,
+                "needed_resources": [
+                    {"item_name": "First Aid Kits", "quantity": 2}
+                ]
+            }}
 
     state = apply_manual_location(state, 26.125, 91.8108)
     assert state["incident"]["location_source"] == "manual"
@@ -108,8 +115,23 @@ def test_manual_pin_outside_guwahati_is_rejected():
 @patch("app.graph.RoadNetwork.from_graphml")
 def test_hazards_are_passed_to_the_router_except_the_one_around_the_incident(mock_from_graphml):
     store = HazardStore()
-    store.add(HazardCreate(name="at incident", center={"lat": 26.1750, "lon": 91.7750}, radius_m=200))
-    store.add(HazardCreate(name="underpass", center={"lat": 26.1600, "lon": 91.7800}, radius_m=200))
+        # Hazard away from the incident: router must avoid it.
+    store.add(
+        HazardCreate(
+            name="underpass",
+            center={"lat": 26.1800, "lon": 91.7800},
+            radius_m=100,
+        )
+    )
+
+    # Hazard surrounding the incident: router must not exclude it.
+    store.add(
+        HazardCreate(
+            name="at incident",
+            center={"lat": 26.1750, "lon": 91.7750},
+            radius_m=100,
+        )
+    )
     net = MagicMock()
     net.route.return_value = fake_route()
     mock_from_graphml.return_value = net
@@ -156,4 +178,9 @@ def test_low_severity_incident_far_from_every_depot_still_gets_stock(mock_from_g
 
     out = allocation_node(state)
 
-    assert sum(out["allocation"]["INC_1"].values()) == 10
+    total_allocated = sum(
+    sum(resources.values())
+    for resources in out["allocation"]["INC_1"].values()
+)
+
+    assert total_allocated == 10
