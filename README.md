@@ -189,15 +189,18 @@ The test modules cover triage, schemas, geocoding, routing, graph handling, haza
 
 Evaluation artifacts are stored in `evaluation/results/`.
 
-The rules-based triage evaluation currently reports:
+Triage results, with what each number does and does not mean:
 
-- 117 labelled messages
-- 0 parse failures
-- 98.3% severity accuracy
-- 98.4% macro F1 score
-- 98.0% recall for CRITICAL incidents
+| Test | Messages | Severity accuracy | CRITICAL recall |
+|---|---|---|---|
+| Rule parser, development set | 117 | 98.3% | 98.0% |
+| Rule parser, held-out set (`python -m evaluation.heldout`) | 43 | 41.9% | 2 of 15 |
+| Gemini (`gemini-3.1-flash-lite`), stratified sample | 18 | 83.3% | 7 of 7 |
 
-These figures describe the rules-based evaluation dataset and should not be interpreted as Gemini model accuracy or real-world field performance.
+- The 98.3% was measured on the same 117 messages used to develop the rules, so it shows how well the rules fit that set. It is not an estimate of accuracy on new messages. The held-out set (messages written after the rules) is the fair test of the offline parser, which is only the fallback when Gemini is unavailable.
+- Gemini was evaluated on 18 of the 117 messages because the free API quota is 20 requests a day per model. With 18 messages the 95% confidence interval is roughly 61% to 94%.
+- Labels were checked by two annotators: first-round agreement was 65.8% (Cohen's kappa 0.52); the 40 disagreements were resolved with written tie-break rules (`evaluation/annotation/`).
+- All messages were written by the authors, not collected from real victims.
 
 Routing, latency, and allocation evaluation results are also maintained in the evaluation results directory. Refer to the corresponding JSON and Markdown reports for methodology and metrics.
 
